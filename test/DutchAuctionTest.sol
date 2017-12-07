@@ -1,23 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "./TestFramework.sol";
-
-contract DutchAuctionBidder {
-
-    DutchAuction auction;
-
-    function DutchAuctionBidder(DutchAuction _auction) public {
-        auction = _auction;
-    }
-
-    //wrapped call
-    function bid(uint bidValue) public returns (bool success){
-      success = auction.call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
-    }
-
-    //can receive money
-    function() public payable{}
-}
+import "./Bidders.sol";
 
 contract DutchAuctionTest {
 
@@ -29,6 +13,7 @@ contract DutchAuctionTest {
 
     //can receive money
     function() public payable {}
+    function DutchAuctionTest() public payable {}
 
     function setupContracts() public {
         t = new Timer(0);

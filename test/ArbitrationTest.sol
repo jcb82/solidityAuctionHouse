@@ -1,32 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "./TestFramework.sol";
-
-contract Participant {
-
-    Auction auction;
-    
-    function Participant(Auction _auction) public {
-        setAuction(_auction);
-    }
-
-    function setAuction(Auction _auction) public {
-        auction = _auction;
-    }
-
-    //wrapped call
-    function callFinalize() public returns (bool success) {
-      success = auction.call.gas(200000)(bytes4 (keccak256("finalize()")));
-    }
-
-    //wrapped call
-    function callRefund() public returns (bool success)  {
-      success = auction.call.gas(200000)(bytes4 (keccak256("refund()")));
-    }
-
-    //can receive money
-    function() public payable {}
-}
+import "./Bidders.sol";
 
 contract SimpleAuction is Auction {
 
@@ -34,7 +9,7 @@ contract SimpleAuction is Auction {
     function SimpleAuction(address _sellerAddress,
                            address _judgeAddress,
                            address _timerAddress,
-                           address _winner) public
+                           address _winner) public payable
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         if (_winner != 0)
@@ -62,6 +37,7 @@ contract ArbitrationTest {
 
     //can receive money
     function() public payable {}
+    function ArbitrationTest() public payable {}
 
     function setupContracts(bool winnerDeclared, bool hasJudge) public {
         judge = new Participant(Auction(0));

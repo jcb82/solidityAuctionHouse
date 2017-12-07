@@ -8,9 +8,7 @@ import "../contracts/Timer.sol";
 import "truffle/Assert.sol";
 
 
-/*
- * This needs to be here or else Truffle complains
-*/
+// Needs to be defined or else to be here or else Truffle complains
 contract TestFramework{
     //can receive money
     function() public payable {}

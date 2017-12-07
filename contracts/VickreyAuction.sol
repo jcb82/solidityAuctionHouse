@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 import "./Auction.sol";
 
-//Part 4
 contract VickreyAuction is Auction {
 
     uint public minimumPrice;
@@ -18,7 +17,7 @@ contract VickreyAuction is Auction {
                             uint _minimumPrice,
                             uint _biddingPeriod,
                             uint _revealPeriod,
-                            uint _bidDepositAmount) 
+                            uint _bidDepositAmount) public
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         minimumPrice = _minimumPrice;

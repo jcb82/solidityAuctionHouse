@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 import "./Auction.sol";
 
-// Part 3
 contract EnglishAuction is Auction {
 
     uint public initialPrice;
