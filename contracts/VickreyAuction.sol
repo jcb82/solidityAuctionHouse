@@ -11,7 +11,7 @@ contract VickreyAuction is Auction {
     //TODO: place your code here
 
     // constructor
-    function VickreyAuction(address _sellerAddress,
+    constructor(address _sellerAddress,
                             address _judgeAddress,
                             address _timerAddress,
                             uint _minimumPrice,
@@ -34,6 +34,9 @@ contract VickreyAuction is Auction {
     // Only allow commitments before biddingDeadline
     function commitBid(bytes32 bidCommitment) public payable {
         // TODO: place your code here
+
+        //NOOP to silence compiler warning. Delete me.
+        bidCommitment ^= 0;
     }
 
     // Check that the bid (msg.value) matches the commitment
@@ -42,6 +45,10 @@ contract VickreyAuction is Auction {
     // If the bid is the new highest known bid, the deposit is returned and the previous high bidder's bid is returned. 
     function revealBid(bytes32 nonce) public payable returns(bool isHighestBidder) {
         // TODO: place your code here
+
+        //NOOPs to silence compiler warning. Delete me.
+        nonce ^= 0;
+        isHighestBidder = false;
     }
 
     // finalize() must be extended here to provide a refund to the winner

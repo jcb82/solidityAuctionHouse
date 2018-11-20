@@ -10,7 +10,7 @@ contract DutchAuction is Auction {
     //TODO: place your code here
 
     // constructor
-    function DutchAuction(address _sellerAddress,
+    constructor(address _sellerAddress,
                           address _judgeAddress,
                           address _timerAddress,
                           uint _initialPrice,

@@ -8,7 +8,7 @@ contract Participant {
 
     Auction auction;
     
-    function Participant(Auction _auction) public {
+    constructor(Auction _auction) public {
         setAuction(_auction);
     }
 
@@ -18,12 +18,12 @@ contract Participant {
 
     //wrapped call
     function callFinalize() public returns (bool success) {
-      success = auction.call.gas(200000)(bytes4 (keccak256("finalize()")));
+      success = address(auction).call.gas(200000)(bytes4 (keccak256("finalize()")));
     }
 
     //wrapped call
     function callRefund() public returns (bool success)  {
-      success = auction.call.gas(200000)(bytes4 (keccak256("refund()")));
+      success = address(auction).call.gas(200000)(bytes4 (keccak256("refund()")));
     }
 
     //can receive money
@@ -35,13 +35,13 @@ contract DutchAuctionBidder {
 
     DutchAuction auction;
 
-    function DutchAuctionBidder(DutchAuction _auction) public {
+    constructor(DutchAuction _auction) public {
         auction = _auction;
     }
 
     //wrapped call
     function bid(uint bidValue) public returns (bool success){
-      success = auction.call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
+      success = address(auction).call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
     }
 
     //can receive money
@@ -52,13 +52,13 @@ contract EnglishAuctionBidder {
 
     EnglishAuction auction;
 
-    function EnglishAuctionBidder(EnglishAuction _auction) public {
+    constructor(EnglishAuction _auction) public {
         auction = _auction;
     }
 
     //wrapped call
     function bid(uint bidValue) public returns (bool success){
-      success = auction.call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
+      success = address(auction).call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
     }
 
     //can receive money
@@ -70,7 +70,7 @@ contract VickreyAuctionBidder {
     VickreyAuction auction;
     bytes32 nonce;
 
-    function VickreyAuctionBidder(VickreyAuction _auction, bytes32 _nonce) public {
+    constructor(VickreyAuction _auction, bytes32 _nonce) public {
         auction = _auction;
         nonce = _nonce;
     }
@@ -86,13 +86,13 @@ contract VickreyAuctionBidder {
 
     //wrapped call
     function commitBid(uint _bidValue, uint _depositValue) public returns (bool success) {
-      bytes32 commitment = keccak256(_bidValue, nonce);
-      success = auction.call.value(_depositValue).gas(200000)(bytes4 (keccak256("commitBid(bytes32)")), commitment);
+      bytes32 commitment = keccak256(abi.encodePacked(_bidValue, nonce));
+      success = address(auction).call.value(_depositValue).gas(200000)(bytes4 (keccak256("commitBid(bytes32)")), commitment);
     }
 
     //wrapped call
     function revealBid(uint _bidValue) public returns (bool success) {
-      success = auction.call.value(_bidValue).gas(200000)(bytes4 (keccak256("revealBid(bytes32)")), nonce);
+      success = address(auction).call.value(_bidValue).gas(200000)(bytes4 (keccak256("revealBid(bytes32)")), nonce);
     }
 
     //can receive money

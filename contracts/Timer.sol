@@ -8,25 +8,25 @@ contract Timer {
     address owner;
 
     // constructor
-    function Timer(uint _startTime) public {
+    constructor(uint _startTime) public {
         owner = msg.sender;
         time = _startTime;
         startTime = _startTime;
     }
 
-    function getTime() public returns (uint) {
+    function getTime() public view returns (uint) {
         return time;
     }
 
-    function resetTime() ownerOnly {
+    function resetTime() public ownerOnly {
         time = startTime;
     }
 
-    function setTime(uint _newTime) ownerOnly {
+    function setTime(uint _newTime) public ownerOnly {
         time = _newTime;
     }
 
-    function offsetTime(uint _offset) ownerOnly {
+    function offsetTime(uint _offset) public ownerOnly {
         time += _offset;
     }
     

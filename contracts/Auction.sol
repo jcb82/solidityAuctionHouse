@@ -9,7 +9,7 @@ contract Auction {
     address internal winnerAddress;
 
     // constructor
-    function Auction(address _sellerAddress,
+    constructor(address _sellerAddress,
                      address _judgeAddress,
                      address _timerAddress) public {
 
@@ -42,7 +42,7 @@ contract Auction {
         //TODO: place your code here
     } 
 
-    function getWinner() public returns (address winner){
+    function getWinner() public view returns (address winner){
         return winnerAddress;
     }
 

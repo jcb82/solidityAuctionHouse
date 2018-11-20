@@ -6,7 +6,7 @@ import "./Bidders.sol";
 contract SimpleAuction is Auction {
 
     // constructor
-    function SimpleAuction(address _sellerAddress,
+    constructor(address _sellerAddress,
                            address _judgeAddress,
                            address _timerAddress,
                            address _winner) public payable
@@ -37,7 +37,7 @@ contract ArbitrationTest {
 
     //can receive money
     function() public payable {}
-    function ArbitrationTest() public payable {}
+    constructor() public payable {}
 
     function setupContracts(bool winnerDeclared, bool hasJudge) public {
         judge = new Participant(Auction(0));
@@ -50,7 +50,7 @@ contract ArbitrationTest {
         else
             testAuction = new SimpleAuction(seller, 0, 0, 0);
 
-        testAuction.transfer(100 wei);
+        address(testAuction).transfer(100 wei);
 
         if (winnerDeclared)
             testAuction.declareWinner(winner);
@@ -95,31 +95,31 @@ contract ArbitrationTest {
     function testJudgeFinalize() public {
         setupContracts(true, true);
         Assert.isTrue(judge.callFinalize(), "judge finalize call should succeed");
-        Assert.equal(seller.balance, 100, "seller should receive funds after finalize");
+        Assert.equal(address(seller).balance, 100, "seller should receive funds after finalize");
     }
 
     function testWinnerFinalize() public {
         setupContracts(true, true);
         Assert.isTrue(winner.callFinalize(), "winner finalize call should succeed");
-        Assert.equal(seller.balance, 100, "seller should receive funds after finalize");
+        Assert.equal(address(seller).balance, 100, "seller should receive funds after finalize");
     }
 
     function testPublicFinalize() public {
         setupContracts(true, false);
         Assert.isTrue(other.callFinalize(), "public finalize call should succeed");
-        Assert.equal(seller.balance, 100, "seller should receive funds after finalize");
+        Assert.equal(address(seller).balance, 100, "seller should receive funds after finalize");
     }
 
     function testJudgeRefund() public {
         setupContracts(true, true);
         Assert.isTrue(judge.callRefund(), "judge refund call should succeed");
-        Assert.equal(winner.balance, 100, "winner should receive funds after refund");
+        Assert.equal(address(winner).balance, 100, "winner should receive funds after refund");
     }
 
     function testSellerRefund() public {
         setupContracts(true, false);
         Assert.isTrue(seller.callRefund(), "seller refund call should succeed");
-        Assert.equal(winner.balance, 100, "winner should receive funds after refund");
+        Assert.equal(address(winner).balance, 100, "winner should receive funds after refund");
     }
     
 }

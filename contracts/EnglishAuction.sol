@@ -10,7 +10,7 @@ contract EnglishAuction is Auction {
     //TODO: place your code here
 
     // constructor
-    function EnglishAuction(address _sellerAddress,
+    constructor(address _sellerAddress,
                           address _judgeAddress,
                           address _timerAddress,
                           uint _initialPrice,
@@ -31,7 +31,7 @@ contract EnglishAuction is Auction {
 
     //TODO: place your code here
     //Need to override the default implementation
-    function getWinner() public returns (address winner){
+    function getWinner() public view returns (address winner){
         return 0;
     }
 }

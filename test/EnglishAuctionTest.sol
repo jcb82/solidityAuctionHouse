@@ -17,7 +17,7 @@ contract EnglishAuctionTest {
 
     //can receive money
     function() public payable {}
-    function EnglishAuctionTest() public payable {}
+    constructor() public payable {}
 
     function setupContracts() public {
         t = new Timer(0);

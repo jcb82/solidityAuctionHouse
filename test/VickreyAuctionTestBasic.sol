@@ -18,7 +18,7 @@ contract VickreyAuctionTestBasic {
 
     //can receive money
     function() public payable {}
-    function VickreyAuctionTestAdvanced() public payable {}
+    constructor() public payable {}
 
     function setupContracts() public {
         t = new Timer(0);
