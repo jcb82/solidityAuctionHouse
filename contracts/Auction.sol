@@ -7,6 +7,9 @@ contract Auction {
     address internal timerAddress;
     address internal sellerAddress;
     address internal winnerAddress;
+    uint winningPrice;
+
+    // TODO: place your code here
 
     // constructor
     constructor(address _sellerAddress,
@@ -30,20 +33,33 @@ contract Auction {
         return block.number;
     }
 
+    function getWinner() public view returns (address winner) {
+        return winnerAddress;
+    }
+
+    function getWinningPrice() public view returns (uint price) {
+        return winningPrice;
+    }
+
     // If no judge is specified, anybody can call this.
     // If a judge is specified, then only the judge or winning bidder may call.
     function finalize() public {
-        //TODO: place your code here
+        // TODO: place your code here
     }
 
     // This can ONLY be called by seller or the judge (if a judge exists).
     // Money should only be refunded to the winner.
     function refund() public {
-        //TODO: place your code here
+        // TODO: place your code here
     } 
 
-    function getWinner() public view returns (address winner){
-        return winnerAddress;
+    // Withdraw funds from the contract.
+    // If called, all funds available to the caller should be refunded.
+    // This should be the *only* place the contract ever transfers funds out.
+    // Ensure that your withdrawal functionality is not vulnerable to
+    // re-entrancy or unchecked-spend vulnerabilities.
+    function withdraw() public {
+        //TODO: place your code here
     }
 
 }

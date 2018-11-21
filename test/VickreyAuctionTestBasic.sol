@@ -37,9 +37,9 @@ contract VickreyAuctionTestBasic {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
-        uint initialAuctionBalance = testAuction.balance;
+        uint initialAuctionBalance = address(testAuction).balance;
 
-        bidder.transfer(testAuction.bidDepositAmount());
+        address(bidder).transfer(testAuction.bidDepositAmount());
         bool result = bidder.commitBid(bidValue);
 
         if (expectedResult == false) {
@@ -47,7 +47,7 @@ contract VickreyAuctionTestBasic {
         }
         else {
             Assert.isTrue(result, message);
-            Assert.equal(testAuction.balance, initialAuctionBalance + testAuction.bidDepositAmount(), "auction should retain deposit");
+            Assert.equal(address(testAuction).balance, initialAuctionBalance + testAuction.bidDepositAmount(), "auction should retain deposit");
         }
         t.setTime(oldTime);
     }
@@ -61,7 +61,7 @@ contract VickreyAuctionTestBasic {
         uint oldTime = t.getTime();
         t.setTime(bidTime);
 
-        bidder.transfer(bidValue);
+        address(bidder).transfer(bidValue);
         bool result = bidder.revealBid(bidValue);
 
         if (expectedResult == false) {
@@ -95,25 +95,24 @@ contract VickreyAuctionTestBasic {
 
     function testExcessBidDeposit() public {
         setupContracts();
-        alice.transfer(1067);
-        Assert.isTrue(alice.commitBid(1000, 1067), "bid with excess deposit should be accepted");
-        Assert.equal(alice.balance, 67, "bid with excess deposit should be partially refunded");
-        Assert.equal(testAuction.balance, 1000, "bid with excess deposit should be retain exact deposit");
+        address(alice).transfer(1067);
+        Assert.isFalse(alice.commitBid(1000, 1067), "bid with excess deposit should be rejected");
+        Assert.equal(address(alice).balance, 1067, "bid with excess deposit should be rejected");
     }
 
     function testChangeBidCommitmentRefund() public {
         setupContracts();
-        alice.transfer(2548);
+        address(alice).transfer(2548);
         Assert.isTrue(alice.commitBid(500, 1000), "valid bid should be accepted");
         t.setTime(1);
-        Assert.isTrue(alice.commitBid(550, 1097), "valid bid change #1 should be accepted");
+        Assert.isTrue(alice.commitBid(550, 0), "valid bid change #1 should be accepted");
         t.setTime(2);
-        Assert.isTrue(alice.commitBid(450, 401), "valid bid #2 change should be accepted");
+        Assert.isTrue(alice.commitBid(450, 0), "valid bid change #2 should be accepted");
         t.setTime(3);
-        Assert.isTrue(alice.commitBid(600, 0), "valid bid #3 change should be accepted");
+        Assert.isFalse(alice.commitBid(300, 1000), "invalid bid #3 change should be rejected");
 
-        Assert.equal(testAuction.balance, 1000, "bid changes should still capture deposit");
-        Assert.equal(alice.balance, 1548, "bid changes should not capture additional deposit");
+        Assert.equal(address(testAuction).balance, 1000, "bid changes should still capture deposit");
+        Assert.equal(address(alice).balance, 1548, "bid changes should not capture additional deposit");
     }
 
     function testEarlyReveal() public {

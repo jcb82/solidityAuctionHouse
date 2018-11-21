@@ -26,6 +26,11 @@ contract Participant {
       success = address(auction).call.gas(200000)(bytes4 (keccak256("refund()")));
     }
 
+    //wrapped call
+    function callWithdraw() public returns (bool success)  {
+      success = address(auction).call.gas(200000)(bytes4 (keccak256("withdraw()")));
+    }
+
     //can receive money
     function() public payable {}
 }
@@ -44,6 +49,11 @@ contract DutchAuctionBidder {
       success = address(auction).call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
     }
 
+    //wrapped call
+    function callWithdraw() public returns (bool success)  {
+      success = address(auction).call.gas(200000)(bytes4 (keccak256("withdraw()")));
+    }
+
     //can receive money
     function() public payable{}
 }
@@ -59,6 +69,11 @@ contract EnglishAuctionBidder {
     //wrapped call
     function bid(uint bidValue) public returns (bool success){
       success = address(auction).call.value(bidValue).gas(200000)(bytes4 (keccak256("bid()")));
+    }
+
+    //wrapped call
+    function callWithdraw() public returns (bool success)  {
+      success = address(auction).call.gas(200000)(bytes4 (keccak256("withdraw()")));
     }
 
     //can receive money
@@ -93,6 +108,11 @@ contract VickreyAuctionBidder {
     //wrapped call
     function revealBid(uint _bidValue) public returns (bool success) {
       success = address(auction).call.value(_bidValue).gas(200000)(bytes4 (keccak256("revealBid(bytes32)")), nonce);
+    }
+
+    //wrapped call
+    function callWithdraw() public returns (bool success)  {
+      success = address(auction).call.gas(200000)(bytes4 (keccak256("withdraw()")));
     }
 
     //can receive money

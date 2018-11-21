@@ -7,7 +7,7 @@ contract EnglishAuction is Auction {
     uint public biddingPeriod;
     uint public minimumPriceIncrement;
 
-    //TODO: place your code here
+    // TODO: place your code here
 
     // constructor
     constructor(address _sellerAddress,
@@ -22,16 +22,16 @@ contract EnglishAuction is Auction {
         biddingPeriod = _biddingPeriod;
         minimumPriceIncrement = _minimumPriceIncrement;
 
-        //TODO: place your code here
+        // TODO: place your code here
     }
 
     function bid() public payable{
-        //TODO: place your code here
+        // TODO: place your code here
     }
 
-    //TODO: place your code here
-    //Need to override the default implementation
+    // Need to override the default implementation
     function getWinner() public view returns (address winner){
-        return 0;
+        return winner;
+        // TODO: place your code here
     }
 }

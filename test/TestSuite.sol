@@ -20,19 +20,19 @@ contract TestLogger {
     }
     
     function logTest(string name) public {
-        if (target.call.gas(3000000)(bytes4 (keccak256(name)))) {
-            PassedTest(name);
+        if (target.call.gas(3000000)(keccak256(abi.encodePacked(name)))) {
+            emit PassedTest(name);
             numPasses += 1;
         }
         else
-            FailedTest(name);
+            emit FailedTest(name);
         numTests += 1;
     }
     
     function logSummary() public {
-        TotalTests(numTests);
-        PassedTests(numPasses);
-        FailedTests(numTests - numPasses);
+        emit TotalTests(numTests);
+        emit PassedTests(numPasses);
+        emit FailedTests(numTests - numPasses);
     }
 
 }
@@ -44,7 +44,7 @@ contract TestSuite {
     
     function ArbitrationTests() public {
         ArbitrationTest t = new ArbitrationTest();
-        t.transfer(1 ether);
+        address(t).transfer(1 ether);
         string[10] memory tests = [
             "testCreateContracts()",
             "testEarlyFinalize()",
@@ -65,7 +65,7 @@ contract TestSuite {
 
     function EnglishAuctionTests() public {
         ArbitrationTest t = new ArbitrationTest();
-        t.transfer(1 ether);
+        address(t).transfer(1 ether);
         string[10] memory tests = [
             "testCreateContracts()",
             "testEarlyFinalize()",
@@ -84,7 +84,7 @@ contract TestSuite {
         l.logSummary();
     }
 
-    function allTests() public {
+    function allTests() public pure {
 
 
     }

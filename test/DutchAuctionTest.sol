@@ -26,10 +26,10 @@ contract DutchAuctionTest {
                      bool expectedResult,
                      string message) internal {
         DutchAuctionBidder bidder = new DutchAuctionBidder(testAuction);
-        bidder.transfer(bidValue);
+        address(bidder).transfer(bidValue);
         uint oldTime = t.getTime();
         t.setTime(bidTime);
-        uint initialAuctionBalance = testAuction.balance;
+        uint initialAuctionBalance = address(testAuction).balance;
         address currentWinner = testAuction.getWinner();
         bool result = bidder.bid(bidValue);
         if (expectedResult == false) {
@@ -38,8 +38,8 @@ contract DutchAuctionTest {
         }
         else{
           Assert.isTrue(result, message);
-          Assert.equal(testAuction.balance, initialAuctionBalance + expectedPrice, "auction should retain final price");
-          Assert.equal(bidder.balance, bidValue - expectedPrice, "bidder should be refunded excess bid amount");
+          Assert.equal(address(testAuction).balance, initialAuctionBalance + expectedPrice, "auction should retain final price");
+          Assert.equal(address(bidder).balance, bidValue - expectedPrice, "bidder should be refunded excess bid amount");
           Assert.equal(testAuction.getWinner(), bidder, "bidder should be declared the winner");
         }
         t.setTime(oldTime);
