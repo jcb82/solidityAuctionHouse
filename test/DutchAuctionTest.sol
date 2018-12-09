@@ -38,6 +38,7 @@ contract DutchAuctionTest {
         }
         else{
           Assert.isTrue(result, message);
+          bidder.callWithdraw();
           Assert.equal(address(testAuction).balance, initialAuctionBalance + expectedPrice, "auction should retain final price");
           Assert.equal(address(bidder).balance, bidValue - expectedPrice, "bidder should be refunded excess bid amount");
           Assert.equal(testAuction.getWinner(), bidder, "bidder should be declared the winner");
