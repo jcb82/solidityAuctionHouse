@@ -1,4 +1,5 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
+
 import "./Auction.sol";
 
 contract DutchAuction is Auction {

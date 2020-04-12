@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 
 import "./TestFramework.sol";
 import "./ArbitrationTest.sol";
@@ -19,8 +19,10 @@ contract TestLogger {
         target = _target;
     }
     
-    function logTest(string name) public {
-        if (target.call.gas(3000000)(keccak256(abi.encodePacked(name)))) {
+    function logTest(string memory name) public {
+        bytes memory namebytes = abi.encode(name);
+        (bool success, ) = target.call.gas(3000000)(namebytes);  
+        if (success) {
             emit PassedTest(name);
             numPasses += 1;
         }
@@ -40,7 +42,7 @@ contract TestLogger {
 contract TestSuite {
 
     //can receive money
-    function() public payable {}
+    function() external payable {}
     
     function ArbitrationTests() public {
         ArbitrationTest t = new ArbitrationTest();

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 
 // Simple contract to store time. You should not need to be modify this contract.
 contract Timer {

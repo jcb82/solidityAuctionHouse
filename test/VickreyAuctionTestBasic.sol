@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -17,15 +17,17 @@ contract VickreyAuctionTestBasic {
     uint public initialBalance = 1000000000 wei;
 
     //can receive money
-    function() public payable {}
+    function() external payable {}
     constructor() public payable {}
 
     function setupContracts() public {
         t = new Timer(0);
-        testAuction = new VickreyAuction(this, 0, t, 300, 10, 10, 1000);
+        testAuction = new VickreyAuction(address(this), address(0), address(t), 300, 10, 10, 1000);
         bidderCounter += 1;
         alice = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
+        bidderCounter += 1;
         bob = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
+        bidderCounter += 1;
         carol = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
     }
 
@@ -33,7 +35,7 @@ contract VickreyAuctionTestBasic {
                      uint bidValue, 
                      uint bidTime,
                      bool expectedResult,
-                     string message) internal {
+                     string memory message) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
@@ -56,7 +58,7 @@ contract VickreyAuctionTestBasic {
                      uint bidValue, 
                      uint bidTime,
                      bool expectedResult,
-                     string message) internal {
+                     string memory message) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
@@ -132,7 +134,8 @@ contract VickreyAuctionTestBasic {
         commitBid(alice, 340, 7, true, "valid bid commitment should be accepted");
         commitBid(bob, 380, 8, true, "valid bid commitment should be accepted");
         revealBid(alice, 320, 14, false, "incorrect bid reveal should be rejected");
-        bob.setNonce(1);
+        bidderCounter += 1;
+        bob.setNonce(bytes32(bidderCounter));
         revealBid(bob, 380, 16, false, "incorrect bid reveal should be rejected");
     }
 

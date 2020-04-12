@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 
 import "../contracts/Auction.sol";
 import "../contracts/DutchAuction.sol";
@@ -11,6 +11,6 @@ import "truffle/Assert.sol";
 // Needs to be defined or else to be here or else Truffle complains
 contract TestFramework{
     //can receive money
-    function() public payable {}
+    function() external payable {}
 
 }

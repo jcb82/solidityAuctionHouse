@@ -1,4 +1,5 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
+
 import "./Timer.sol";
 
 contract Auction {
@@ -19,7 +20,7 @@ contract Auction {
         judgeAddress = _judgeAddress;
         timerAddress = _timerAddress;
         sellerAddress = _sellerAddress;
-        if (sellerAddress == 0)
+        if (sellerAddress == address(0))
           sellerAddress = msg.sender;
     }
 
@@ -27,7 +28,7 @@ contract Auction {
     // You should use this instead of block.number directly
     // You should not modify this function.
     function time() public view returns (uint) {
-        if (timerAddress != 0)
+        if (timerAddress != address(0))
           return Timer(timerAddress).getTime();
         
         return block.number;

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -13,7 +13,7 @@ contract SimpleAuction is Auction {
                            uint _winningPrice) public payable
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
-        if (_winner != 0)
+        if (_winner != address(0))
             declareWinner(_winner, _winningPrice); 
     }
 
@@ -23,7 +23,7 @@ contract SimpleAuction is Auction {
     }
 
     //can receive money
-    function() public payable {}
+    function() external payable {}
 }
 
 contract ArbitrationTest {
@@ -38,7 +38,7 @@ contract ArbitrationTest {
     Participant other;
 
     //can receive money
-    function() public payable {}
+    function() external payable{}
     constructor() public payable {}
 
     function setupContracts(bool winnerDeclared, bool hasJudge) public {
@@ -48,14 +48,14 @@ contract ArbitrationTest {
         other = new Participant(Auction(0));
 
         if (hasJudge) 
-            testAuction = new SimpleAuction(seller, judge, 0, 0, 100);
+            testAuction = new SimpleAuction(address(seller), address(judge), address(0), address(0), 100);
         else
-            testAuction = new SimpleAuction(seller, 0, 0, 0, 100);
+            testAuction = new SimpleAuction(address(seller), address(0), address(0), address(0), 100);
 
         address(testAuction).transfer(100 wei);
 
         if (winnerDeclared)
-            testAuction.declareWinner(winner, 100);
+            testAuction.declareWinner(address(winner), 100);
 
         judge.setAuction(testAuction);
         seller.setAuction(testAuction);

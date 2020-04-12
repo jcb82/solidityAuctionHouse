@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.16;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -17,12 +17,12 @@ contract VickreyAuctionTestAdvanced {
     uint public initialBalance = 1000000000 wei;
 
     //can receive money
-    function() public payable {}
+    function() external payable {}
     constructor() public payable {}
 
     function setupContracts() public {
         t = new Timer(0);
-        testAuction = new VickreyAuction(this, 0, t, 300, 10, 10, 1000);
+        testAuction = new VickreyAuction(address(this), address(0), address(t), 300, 10, 10, 1000);
         bidderCounter += 1;
         alice = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
         bob = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
@@ -33,7 +33,7 @@ contract VickreyAuctionTestAdvanced {
                      uint bidValue, 
                      uint bidTime,
                      bool expectedResult,
-                     string message) internal {
+                     string memory message) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
@@ -56,7 +56,7 @@ contract VickreyAuctionTestAdvanced {
                      uint bidValue, 
                      uint bidTime,
                      bool expectedResult,
-                     string message) internal {
+                     string memory message) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
