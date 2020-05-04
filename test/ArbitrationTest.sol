@@ -14,7 +14,7 @@ contract SimpleAuction is Auction {
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         if (_winner != address(0))
-            declareWinner(_winner, _winningPrice); 
+            declareWinner(_winner, _winningPrice);
     }
 
     function declareWinner(address _winner, uint _winningPrice) public {
@@ -47,7 +47,7 @@ contract ArbitrationTest {
         seller = new Participant(Auction(0));
         other = new Participant(Auction(0));
 
-        if (hasJudge) 
+        if (hasJudge)
             testAuction = new SimpleAuction(address(seller), address(judge), address(0), address(0), 100);
         else
             testAuction = new SimpleAuction(address(seller), address(0), address(0), address(0), 100);
@@ -62,7 +62,7 @@ contract ArbitrationTest {
         winner.setAuction(testAuction);
         other.setAuction(testAuction);
     }
-    
+
     function testCreateContracts() public {
         setupContracts(false, true);
         Assert.isFalse(false, "this test should not fail");
@@ -128,5 +128,5 @@ contract ArbitrationTest {
         Assert.isTrue(winner.callWithdraw(), "seller withdraw call should succeed");
         Assert.equal(address(winner).balance, 100, "winner should receive funds after refund");
     }
-    
+
 }

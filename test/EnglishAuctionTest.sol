@@ -27,11 +27,13 @@ contract EnglishAuctionTest {
         carol = new EnglishAuctionBidder(testAuction);
     }
 
-    function makeBid(EnglishAuctionBidder bidder,
-                     uint bidValue, 
-                     uint bidTime,
-                     bool expectedResult,
-                     string memory message) internal {
+    function makeBid(
+        EnglishAuctionBidder bidder,
+        uint bidValue,
+        uint bidTime,
+        bool expectedResult,
+        string memory message
+    ) internal {
 
         uint oldTime = t.getTime();
         uint oldBalance = address(testAuction).balance;

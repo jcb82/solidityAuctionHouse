@@ -10,18 +10,18 @@ contract TestLogger {
     event TotalTests(uint number);
     event PassedTests(uint number);
     event FailedTests(uint number);
-    
+
     uint numPasses;
     uint numTests;
     address target;
-    
+
     function TestCounter(address _target) public {
         target = _target;
     }
-    
+
     function logTest(string memory name) public {
         bytes memory namebytes = abi.encode(name);
-        (bool success, ) = target.call.gas(3000000)(namebytes);  
+        (bool success, ) = target.call.gas(3000000)(namebytes);
         if (success) {
             emit PassedTest(name);
             numPasses += 1;
@@ -30,7 +30,7 @@ contract TestLogger {
             emit FailedTest(name);
         numTests += 1;
     }
-    
+
     function logSummary() public {
         emit TotalTests(numTests);
         emit PassedTests(numPasses);
@@ -43,7 +43,7 @@ contract TestSuite {
 
     //can receive money
     function() external payable {}
-    
+
     function ArbitrationTests() public {
         ArbitrationTest t = new ArbitrationTest();
         address(t).transfer(1 ether);
@@ -59,10 +59,10 @@ contract TestSuite {
             "testJudgeRefund()",
             "testSellerRefund()"
         ];
-        TestLogger l = new TestLogger();
+        TestLogger logger = new TestLogger();
         for (uint i = 0; i < tests.length; i++)
-            l.logTest(tests[i]);
-        l.logSummary();
+            logger.logTest(tests[i]);
+        logger.logSummary();
     }
 
     function EnglishAuctionTests() public {
@@ -80,15 +80,12 @@ contract TestSuite {
             "testJudgeRefund()",
             "testSellerRefund()"
         ];
-        TestLogger l = new TestLogger();
+        TestLogger logger = new TestLogger();
         for (uint i = 0; i < tests.length; i++)
-            l.logTest(tests[i]);
-        l.logSummary();
+            logger.logTest(tests[i]);
+        logger.logSummary();
     }
 
-    function allTests() public pure {
+    function allTests() public pure {}
 
-
-    }
-    
 }

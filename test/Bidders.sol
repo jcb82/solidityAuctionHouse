@@ -7,7 +7,7 @@ contract Bidders {}
 contract Participant {
 
     Auction auction;
-    
+
     constructor(Auction _auction) public {
         setAuction(_auction);
     }
@@ -18,17 +18,17 @@ contract Participant {
 
     //wrapped call
     function callFinalize() public returns (bool success) {
-      (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("finalize()"));
+        (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("finalize()"));
     }
 
     //wrapped call
     function callRefund() public returns (bool success)  {
-      (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("refund()"));
+        (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("refund()"));
     }
 
     //wrapped call
     function callWithdraw() public returns (bool success)  {
-      (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
+        (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
     }
 
     //can receive money
@@ -46,12 +46,12 @@ contract DutchAuctionBidder {
 
     //wrapped call
     function bid(uint bidValue) public returns (bool success){
-      (success, ) = address(auction).call.value(bidValue).gas(200000)(abi.encodeWithSignature("bid()"));
+        (success, ) = address(auction).call.value(bidValue).gas(200000)(abi.encodeWithSignature("bid()"));
     }
 
     //wrapped call
     function callWithdraw() public returns (bool success)  {
-      (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
+        (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
     }
 
     //can receive money
@@ -68,12 +68,12 @@ contract EnglishAuctionBidder {
 
     //wrapped call
     function bid(uint bidValue) public returns (bool success){
-      (success, ) = address(auction).call.value(bidValue).gas(200000)(abi.encodeWithSignature("bid()"));
+        (success, ) = address(auction).call.value(bidValue).gas(200000)(abi.encodeWithSignature("bid()"));
     }
 
     //wrapped call
     function callWithdraw() public returns (bool success)  {
-      (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
+        (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
     }
 
     //can receive money
@@ -96,23 +96,23 @@ contract VickreyAuctionBidder {
 
     //wrapped call
     function commitBid(uint _bidValue) public returns (bool success) {
-      success = commitBid(_bidValue, auction.bidDepositAmount());
+        success = commitBid(_bidValue, auction.bidDepositAmount());
     }
 
     //wrapped call
     function commitBid(uint _bidValue, uint _depositValue) public returns (bool success) {
-      bytes32 commitment = keccak256(abi.encodePacked(_bidValue, nonce));
-      (success, ) = address(auction).call.value(_depositValue).gas(200000)(abi.encodeWithSignature("commitBid(bytes32)", commitment));
+        bytes32 commitment = keccak256(abi.encodePacked(_bidValue, nonce));
+        (success, ) = address(auction).call.value(_depositValue).gas(200000)(abi.encodeWithSignature("commitBid(bytes32)", commitment));
     }
 
     //wrapped call
     function revealBid(uint _bidValue) public returns (bool success) {
-      (success, ) = address(auction).call.value(_bidValue).gas(200000)(abi.encodeWithSignature("revealBid(bytes32)", nonce));
+        (success, ) = address(auction).call.value(_bidValue).gas(200000)(abi.encodeWithSignature("revealBid(bytes32)", nonce));
     }
 
     //wrapped call
     function callWithdraw() public returns (bool success)  {
-      (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
+        (success, ) = address(auction).call.gas(200000)(abi.encodeWithSignature("withdraw()"));
     }
 
     //can receive money

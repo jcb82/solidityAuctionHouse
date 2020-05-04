@@ -31,11 +31,13 @@ contract VickreyAuctionTestBasic {
         carol = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
     }
 
-    function commitBid(VickreyAuctionBidder bidder,
-                     uint bidValue, 
-                     uint bidTime,
-                     bool expectedResult,
-                     string memory message) internal {
+    function commitBid(
+        VickreyAuctionBidder bidder,
+        uint bidValue,
+        uint bidTime,
+        bool expectedResult,
+        string memory message
+    ) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
@@ -54,11 +56,13 @@ contract VickreyAuctionTestBasic {
         t.setTime(oldTime);
     }
 
-    function revealBid(VickreyAuctionBidder bidder,
-                     uint bidValue, 
-                     uint bidTime,
-                     bool expectedResult,
-                     string memory message) internal {
+    function revealBid(
+        VickreyAuctionBidder bidder,
+        uint bidValue,
+        uint bidTime,
+        bool expectedResult,
+        string memory message
+    ) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);

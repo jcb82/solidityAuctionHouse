@@ -20,11 +20,14 @@ contract DutchAuctionTest {
         testAuction = new DutchAuction(address(this), address(0), address(t), 300, 10, 20);
     }
 
-    function makeBid(uint bidValue, 
-                     uint bidTime,
-                     uint expectedPrice,
-                     bool expectedResult,
-                     string memory message) internal {
+    function makeBid(
+        uint bidValue,
+        uint bidTime,
+        uint expectedPrice,
+        bool expectedResult,
+        string memory message
+    ) internal {
+
         DutchAuctionBidder bidder = new DutchAuctionBidder(testAuction);
         address(bidder).transfer(bidValue);
         uint oldTime = t.getTime();
@@ -33,15 +36,15 @@ contract DutchAuctionTest {
         address currentWinner = testAuction.getWinner();
         bool result = bidder.bid(bidValue);
         if (expectedResult == false) {
-          Assert.isFalse(result, message);
-          Assert.equal(address(currentWinner), testAuction.getWinner(), "no winner should be declared after invalid bid");
+            Assert.isFalse(result, message);
+            Assert.equal(address(currentWinner), testAuction.getWinner(), "no winner should be declared after invalid bid");
         }
         else{
-          Assert.isTrue(result, message);
-          bidder.callWithdraw();
-          Assert.equal(address(testAuction).balance, initialAuctionBalance + expectedPrice, "auction should retain final price");
-          Assert.equal(address(bidder).balance, bidValue - expectedPrice, "bidder should be refunded excess bid amount");
-          Assert.equal(testAuction.getWinner(), address(bidder), "bidder should be declared the winner");
+            Assert.isTrue(result, message);
+            bidder.callWithdraw();
+            Assert.equal(address(testAuction).balance, initialAuctionBalance + expectedPrice, "auction should retain final price");
+            Assert.equal(address(bidder).balance, bidValue - expectedPrice, "bidder should be refunded excess bid amount");
+            Assert.equal(testAuction.getWinner(), address(bidder), "bidder should be declared the winner");
         }
         t.setTime(oldTime);
     }

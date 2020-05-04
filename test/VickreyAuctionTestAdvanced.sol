@@ -29,11 +29,13 @@ contract VickreyAuctionTestAdvanced {
         carol = new VickreyAuctionBidder(testAuction, bytes32(bidderCounter));
     }
 
-    function commitBid(VickreyAuctionBidder bidder,
-                     uint bidValue, 
-                     uint bidTime,
-                     bool expectedResult,
-                     string memory message) internal {
+    function commitBid(
+        VickreyAuctionBidder bidder,
+        uint bidValue,
+        uint bidTime,
+        bool expectedResult,
+        string memory message
+    ) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
@@ -52,11 +54,13 @@ contract VickreyAuctionTestAdvanced {
         t.setTime(oldTime);
     }
 
-    function revealBid(VickreyAuctionBidder bidder,
-                     uint bidValue, 
-                     uint bidTime,
-                     bool expectedResult,
-                     string memory message) internal {
+    function revealBid(
+        VickreyAuctionBidder bidder,
+        uint bidValue,
+        uint bidTime,
+        bool expectedResult,
+        string memory message
+    ) internal {
 
         uint oldTime = t.getTime();
         t.setTime(bidTime);
@@ -118,7 +122,7 @@ contract VickreyAuctionTestAdvanced {
         t.setTime(20);
         Assert.equal(address(carol), testAuction.getWinner(), "winner should be declared after auction end");
         testAuction.finalize();
-        
+
         alice.callWithdraw();
         bob.callWithdraw();
         carol.callWithdraw();
