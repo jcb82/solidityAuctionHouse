@@ -31,7 +31,7 @@ contract Timer {
     }
 
     modifier ownerOnly {
-        require(msg.sender != owner, "Can only be called by owner.");
+        require(msg.sender == owner, "Can only be called by owner.");
         _;
     }
 }
