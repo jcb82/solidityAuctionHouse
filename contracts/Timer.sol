@@ -29,10 +29,9 @@ contract Timer {
     function offsetTime(uint _offset) public ownerOnly {
         time += _offset;
     }
-    
+
     modifier ownerOnly {
-        if (msg.sender != owner)
-            revert();
+        require(msg.sender != owner, "Can only be called by owner.");
         _;
     }
 }

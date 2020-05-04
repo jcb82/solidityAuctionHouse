@@ -30,7 +30,7 @@ contract Auction {
     function time() public view returns (uint) {
         if (timerAddress != address(0))
           return Timer(timerAddress).getTime();
-        
+
         return block.number;
     }
 
@@ -52,7 +52,7 @@ contract Auction {
     // Money should only be refunded to the winner.
     function refund() public {
         // TODO: place your code here
-    } 
+    }
 
     // Withdraw funds from the contract.
     // If called, all funds available to the caller should be refunded.

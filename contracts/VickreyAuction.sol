@@ -34,19 +34,13 @@ contract VickreyAuction is Auction {
     // Bidders can update their previous bid for free if desired.
     // Only allow commitments before biddingDeadline
     function commitBid(bytes32 bidCommitment) public payable {
-        // NOOP to silence compiler warning. Delete me.
-        bidCommitment ^= 0;
-
         // TODO: place your code here
     }
 
     // Check that the bid (msg.value) matches the commitment.
     // If the bid is correctly opened, the bidder can withdraw their deposit.
     function revealBid(bytes32 nonce) public payable returns(bool isHighestBidder) {
-        // NOOPs to silence compiler warning. Delete me.
-        nonce ^= 0;
         isHighestBidder = false;
-
         // TODO: place your code here
     }
 
