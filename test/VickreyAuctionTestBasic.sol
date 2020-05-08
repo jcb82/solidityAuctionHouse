@@ -130,7 +130,7 @@ contract VickreyAuctionTestBasic {
     function testLateReveal() public {
         setupContracts();
         commitBid(alice, 340, 7, true, "valid bid commitment should be accepted");
-        revealBid(alice, 340, 20, false, "early bid reveal should be rejected");
+        revealBid(alice, 340, 20, false, "late bid reveal should be rejected");
     }
 
     function testInvalidReveal() public {
