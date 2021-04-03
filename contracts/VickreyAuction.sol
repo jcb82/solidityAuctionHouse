@@ -40,7 +40,6 @@ contract VickreyAuction is Auction {
     // Check that the bid (msg.value) matches the commitment.
     // If the bid is correctly opened, the bidder can withdraw their deposit.
     function revealBid(bytes32 nonce) public payable returns(bool isHighestBidder) {
-        isHighestBidder = false;
         // TODO: place your code here
     }
 
