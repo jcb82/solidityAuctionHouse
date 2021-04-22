@@ -120,8 +120,8 @@ contract ArbitrationTest {
 
         Assert.isTrue(seller.callWithdraw(), "seller withdraw call should succeed");
         Assert.equal(address(seller).balance, 0, "seller should not receive funds before finalize");
-        Assert.isTrue(seller.callWithdraw(), "winner withdraw call should succeed");
-        Assert.equal(address(seller).balance, 0, "winner should not receive funds before finalize");
+        Assert.isTrue(winner.callWithdraw(), "winner withdraw call should succeed");
+        Assert.equal(address(winner).balance, 0, "winner should not receive funds before finalize");
 
         Assert.isTrue(winner.callFinalize(), "winner finalize call should succeed");
 
@@ -143,14 +143,14 @@ contract ArbitrationTest {
     function testJudgeRefund() public {
         setupContracts(true, true);
         Assert.isTrue(judge.callRefund(), "judge refund call should succeed");
-        Assert.isTrue(winner.callWithdraw(), "seller withdraw call should succeed");
+        Assert.isTrue(winner.callWithdraw(), "winner withdraw call should succeed");
         Assert.equal(address(winner).balance, 100, "winner should receive funds after refund");
     }
 
     function testSellerRefund() public {
         setupContracts(true, false);
         Assert.isTrue(seller.callRefund(), "seller refund call should succeed");
-        Assert.isTrue(winner.callWithdraw(), "seller withdraw call should succeed");
+        Assert.isTrue(winner.callWithdraw(), "winner withdraw call should succeed");
         Assert.equal(address(winner).balance, 100, "winner should receive funds after refund");
     }
 

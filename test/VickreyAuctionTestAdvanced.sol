@@ -87,7 +87,7 @@ contract VickreyAuctionTestAdvanced {
         testAuction.finalize();
         Assert.equal(address(bob).balance, 0, "winner should not receive early refund");
         bob.callWithdraw();
-        Assert.equal(address(bob).balance, 1000, "winner should received partial refund");
+        Assert.equal(address(bob).balance, 1000, "winner should receive partial refund");
     }
 
     function testRevealChangedBid() public {
@@ -105,7 +105,7 @@ contract VickreyAuctionTestAdvanced {
         testAuction.finalize();
         Assert.equal(address(alice).balance, 2048, "winner should not receive early refund");
         alice.callWithdraw();
-        Assert.equal(address(alice).balance, 3298, "winner should received partial refund");
+        Assert.equal(address(alice).balance, 3298, "winner should receive partial refund");
     }
 
     function testMultipleBiddersOne() public {
@@ -127,9 +127,9 @@ contract VickreyAuctionTestAdvanced {
         bob.callWithdraw();
         carol.callWithdraw();
 
-        Assert.equal(address(alice).balance, 1500, "loser should received full refund");
-        Assert.equal(address(bob).balance, 1617, "loser should received full refund");
-        Assert.equal(address(carol).balance, 1033, "winner should received partial refund");
+        Assert.equal(address(alice).balance, 1500, "loser should receive full refund");
+        Assert.equal(address(bob).balance, 1617, "loser should receive full refund");
+        Assert.equal(address(carol).balance, 1033, "winner should receive partial refund");
     }
 
     function testMultipleBiddersTwo() public {
@@ -152,8 +152,8 @@ contract VickreyAuctionTestAdvanced {
         bob.callWithdraw();
         carol.callWithdraw();
 
-        Assert.equal(address(alice).balance, 1500, "loser should received full refund");
-        Assert.equal(address(bob).balance, 1617, "loser should received full refund");
-        Assert.equal(address(carol).balance, 1033, "winner should received partial refund");
+        Assert.equal(address(alice).balance, 1500, "loser should receive full refund");
+        Assert.equal(address(bob).balance, 1617, "loser should receive full refund");
+        Assert.equal(address(carol).balance, 1033, "winner should receive partial refund");
     }
 }
