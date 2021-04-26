@@ -57,7 +57,9 @@ contract EnglishAuctionTest {
 
     function testLowInitialBids() public {
         setupContracts();
+        
         address(alice).transfer(1000);
+        
         makeBid(alice, 0, 0, false, "low bid should be rejected");
         makeBid(alice, 299, 9, false, "low bid should be rejected");
     }
@@ -65,7 +67,9 @@ contract EnglishAuctionTest {
 
     function testSingleValidBid() public {
         setupContracts();
+        
         address(alice).transfer(1000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         t.setTime(10);
         Assert.equal(address(testAuction.getWinner()), address(alice), "single bidder should be declared the winner");
@@ -73,7 +77,9 @@ contract EnglishAuctionTest {
 
     function testEarlyWinner() public {
         setupContracts();
+        
         address(alice).transfer(1000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         t.setTime(9);
         Assert.equal(address(testAuction.getWinner()), address(0), "no bidder should be declared before deadline");
@@ -81,8 +87,10 @@ contract EnglishAuctionTest {
 
     function testLowFollowupBids() public {
         setupContracts();
+        
         address(alice).transfer(1000);
         address(bob).transfer(1000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 319, 9, false, "low bid should be rejected");
         makeBid(bob, 250, 7, false, "low bid should be rejected");
@@ -90,8 +98,10 @@ contract EnglishAuctionTest {
 
     function testRefundAfterOutbid() public {
         setupContracts();
+        
         address(alice).transfer(1000);
         address(bob).transfer(1000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 320, 8, true, "valid bid should be accepted");
 
@@ -104,9 +114,11 @@ contract EnglishAuctionTest {
 
     function testLateBids() public {
         setupContracts();
+        
         address(alice).transfer(1000);
         address(bob).transfer(1000);
         address(carol).transfer(1000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 320, 10, false, "late bid should be rejected");
         makeBid(carol, 500, 12, false, "late bid should be rejected");
@@ -114,7 +126,9 @@ contract EnglishAuctionTest {
 
     function testIncreaseBid() public {
         setupContracts();
+        
         address(alice).transfer(1000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(alice, 350, 5, true, "second valid bid should be accepted");
         t.setTime(14);
@@ -130,9 +144,11 @@ contract EnglishAuctionTest {
 
     function testExtendedBidding() public {
         setupContracts();
+        
         address(alice).transfer(5000);
         address(bob).transfer(5000);
         address(carol).transfer(5000);
+        
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 310, 4, false, "invalid bid should be rejected");
         makeBid(carol, 400, 8, true, "valid bid should be accepted");

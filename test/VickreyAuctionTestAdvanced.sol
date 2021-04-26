@@ -41,7 +41,6 @@ contract VickreyAuctionTestAdvanced {
         t.setTime(bidTime);
         uint initialAuctionBalance = address(testAuction).balance;
 
-        address(bidder).transfer(testAuction.bidDepositAmount());
         bool result = bidder.commitBid(bidValue);
 
         if (expectedResult == false) {
@@ -65,7 +64,6 @@ contract VickreyAuctionTestAdvanced {
         uint oldTime = t.getTime();
         t.setTime(bidTime);
 
-        address(bidder).transfer(bidValue);
         bool result = bidder.revealBid(bidValue);
 
         if (expectedResult == false) {
@@ -80,36 +78,49 @@ contract VickreyAuctionTestAdvanced {
     function testMinimalBidder() public {
         setupContracts();
 
-        commitBid(bob, 300, 9, true, "valid bid commitment should be accepted");
-        revealBid(bob, 300, 19, true, "valid bid reveal should be accepted");
+        address(alice).transfer(5000);
+
+        commitBid(alice, 300, 9, true, "valid bid commitment should be accepted");
+        revealBid(alice, 300, 19, true, "valid bid reveal should be accepted");
         t.setTime(20);
-        Assert.equal(address(bob), testAuction.getWinner(), "winner should be declared after auction end");
+        Assert.equal(address(alice), testAuction.getWinner(), "winner should be declared after auction end");
         testAuction.finalize();
-        Assert.equal(address(bob).balance, 0, "winner should not receive early refund");
-        bob.callWithdraw();
-        Assert.equal(address(bob).balance, 1000, "winner should receive partial refund");
+        Assert.equal(address(alice).balance, 3700, "winner should not receive early refund");
+        alice.callWithdraw();
+        Assert.equal(address(alice).balance, 4700, "winner should receive partial refund");
     }
 
     function testRevealChangedBid() public {
         setupContracts();
 
-        address(alice).transfer(2548);
+        address(alice).transfer(5000);
+        address(bob).transfer(5000);
+        address(carol).transfer(5000);
+
         Assert.isTrue(alice.commitBid(500, 1000), "valid bid should be accepted");
         t.setTime(1);
+        
         Assert.isTrue(alice.commitBid(550, 0), "valid bid change should be accepted");
 
         revealBid(alice, 500, 14, false, "incorrect bid reveal should be rejected");
         revealBid(alice, 550, 14, true, "correct bid reveal should be accepted");
+       
         t.setTime(20);
         Assert.equal(address(alice), testAuction.getWinner(), "winner should be declared after auction end");
+                                
         testAuction.finalize();
-        Assert.equal(address(alice).balance, 2048, "winner should not receive early refund");
+
+        Assert.equal(address(alice).balance, 3450, "winner should not receive early refund");
         alice.callWithdraw();
-        Assert.equal(address(alice).balance, 3298, "winner should receive partial refund");
+        Assert.equal(address(alice).balance, 4700, "winner should received partial refund");
     }
 
     function testMultipleBiddersOne() public {
         setupContracts();
+
+        address(alice).transfer(5000);
+        address(bob).transfer(5000);
+        address(carol).transfer(5000);
 
         commitBid(alice, 500, 1, true, "correct bid should be accepted");
         commitBid(bob, 617, 2, true, "correct bid should be accepted");
@@ -127,13 +138,17 @@ contract VickreyAuctionTestAdvanced {
         bob.callWithdraw();
         carol.callWithdraw();
 
-        Assert.equal(address(alice).balance, 1500, "loser should receive full refund");
-        Assert.equal(address(bob).balance, 1617, "loser should receive full refund");
-        Assert.equal(address(carol).balance, 1033, "winner should receive partial refund");
+        Assert.equal(address(alice).balance, 5000, "loser should received full refund");
+        Assert.equal(address(bob).balance, 5000, "loser should received full refund");
+        Assert.equal(address(carol).balance, 4383, "winner should received partial refund");
     }
 
     function testMultipleBiddersTwo() public {
         setupContracts();
+
+        address(alice).transfer(5000);
+        address(bob).transfer(5000);
+        address(carol).transfer(5000);
 
         commitBid(alice, 500, 1, true, "correct bid should be accepted");
         commitBid(bob, 617, 2, true, "correct bid should be accepted");
@@ -152,8 +167,8 @@ contract VickreyAuctionTestAdvanced {
         bob.callWithdraw();
         carol.callWithdraw();
 
-        Assert.equal(address(alice).balance, 1500, "loser should receive full refund");
-        Assert.equal(address(bob).balance, 1617, "loser should receive full refund");
-        Assert.equal(address(carol).balance, 1033, "winner should receive partial refund");
+        Assert.equal(address(alice).balance, 5000, "loser should received full refund");
+        Assert.equal(address(bob).balance, 5000, "loser should received full refund");
+        Assert.equal(address(carol).balance, 4383, "winner should received partial refund");
     }
 }
