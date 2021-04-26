@@ -38,7 +38,6 @@ contract EnglishAuctionTest {
         uint oldTime = t.getTime();
         uint oldBalance = address(testAuction).balance;
         t.setTime(bidTime);
-        address(bidder).transfer(bidValue);
         bool result = bidder.bid(bidValue);
 
         if (expectedResult == false) {
@@ -58,6 +57,7 @@ contract EnglishAuctionTest {
 
     function testLowInitialBids() public {
         setupContracts();
+        address(alice).transfer(1000);
         makeBid(alice, 0, 0, false, "low bid should be rejected");
         makeBid(alice, 299, 9, false, "low bid should be rejected");
     }
@@ -65,6 +65,7 @@ contract EnglishAuctionTest {
 
     function testSingleValidBid() public {
         setupContracts();
+        address(alice).transfer(1000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         t.setTime(10);
         Assert.equal(address(testAuction.getWinner()), address(alice), "single bidder should be declared the winner");
@@ -72,6 +73,7 @@ contract EnglishAuctionTest {
 
     function testEarlyWinner() public {
         setupContracts();
+        address(alice).transfer(1000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         t.setTime(9);
         Assert.equal(address(testAuction.getWinner()), address(0), "no bidder should be declared before deadline");
@@ -79,6 +81,8 @@ contract EnglishAuctionTest {
 
     function testLowFollowupBids() public {
         setupContracts();
+        address(alice).transfer(1000);
+        address(bob).transfer(1000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 319, 9, false, "low bid should be rejected");
         makeBid(bob, 250, 7, false, "low bid should be rejected");
@@ -86,18 +90,23 @@ contract EnglishAuctionTest {
 
     function testRefundAfterOutbid() public {
         setupContracts();
+        address(alice).transfer(1000);
+        address(bob).transfer(1000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 320, 8, true, "valid bid should be accepted");
 
-        Assert.equal(address(bob).balance, 0, "bidder should not retain funds");
+        Assert.equal(address(bob).balance, 680, "bidder should not retain funds");
         Assert.equal(address(testAuction).balance, 620, "auction should retain bidders' funds in escrow");
-        Assert.equal(address(alice).balance, 0, "outbid bidder should not receive early refund");
+        Assert.equal(address(alice).balance, 700, "outbid bidder should not receive early refund");
         alice.callWithdraw();
-        Assert.equal(address(alice).balance, 300, "outbid bidder should be able to withdraw refund");
+        Assert.equal(address(alice).balance, 1000, "outbid bidder should be able to withdraw refund");
     }
 
     function testLateBids() public {
         setupContracts();
+        address(alice).transfer(1000);
+        address(bob).transfer(1000);
+        address(carol).transfer(1000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 320, 10, false, "late bid should be rejected");
         makeBid(carol, 500, 12, false, "late bid should be rejected");
@@ -105,21 +114,25 @@ contract EnglishAuctionTest {
 
     function testIncreaseBid() public {
         setupContracts();
+        address(alice).transfer(1000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(alice, 350, 5, true, "second valid bid should be accepted");
         t.setTime(14);
         Assert.equal(address(testAuction.getWinner()), address(0), "no bidder should be declared before deadline");
         t.setTime(15);
         Assert.equal(address(testAuction.getWinner()), address(alice), "repeat bidder should be declared the winner");
-        Assert.equal(address(alice).balance, 0, "bidder should not retain funds");
+        Assert.equal(address(alice).balance, 350, "bidder should not retain funds");
         Assert.equal(address(testAuction).balance, 650, "auction should retain bidder's funds in escrow");
         alice.callWithdraw();
-        Assert.equal(address(alice).balance, 300, "outbid bidder should be able to withdraw funds");
+        Assert.equal(address(alice).balance, 650, "outbid bidder should be able to withdraw funds");
         Assert.equal(address(testAuction).balance, 350, "auction should retain bidder's funds in escrow");
     }
 
     function testExtendedBidding() public {
         setupContracts();
+        address(alice).transfer(5000);
+        address(bob).transfer(5000);
+        address(carol).transfer(5000);
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 310, 4, false, "invalid bid should be rejected");
         makeBid(carol, 400, 8, true, "valid bid should be accepted");
@@ -133,16 +146,16 @@ contract EnglishAuctionTest {
         t.setTime(39);
         Assert.equal(address(testAuction.getWinner()), address(carol), "final bidder should be declared the winner");
 
-        Assert.equal(address(alice).balance, 0, "bidders should not retain funds");
-        Assert.equal(address(bob).balance, 970, "bidders should not retain funds");
-        Assert.equal(address(carol).balance, 0, "bidders should not retain funds");
+        Assert.equal(address(alice).balance, 3300, "bidders should not retain funds");
+        Assert.equal(address(bob).balance, 4550, "bidders should not retain funds");
+        Assert.equal(address(carol).balance, 3263, "bidders should not retain funds");
 
         alice.callWithdraw();
         bob.callWithdraw();
         carol.callWithdraw();
-        Assert.equal(address(carol).balance, 400, "bidders should get valid refunds");
-        Assert.equal(address(bob).balance, 1420, "bidders should get valid refunds");
-        Assert.equal(address(alice).balance, 1700, "bidders should get valid refunds");
+        Assert.equal(address(carol).balance, 3663, "bidders should get valid refunds");
+        Assert.equal(address(bob).balance, 5000, "bidders should get valid refunds");
+        Assert.equal(address(alice).balance, 5000, "bidders should get valid refunds");
 
         Assert.equal(address(testAuction).balance, 1337, "auction should retain bidder's funds in escrow");
     }
