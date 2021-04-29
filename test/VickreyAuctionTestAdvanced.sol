@@ -112,7 +112,7 @@ contract VickreyAuctionTestAdvanced {
 
         Assert.equal(address(alice).balance, 3450, "winner should not receive early refund");
         alice.callWithdraw();
-        Assert.equal(address(alice).balance, 4700, "winner should received partial refund");
+        Assert.equal(address(alice).balance, 4700, "winner should receive partial refund");
     }
 
     function testMultipleBiddersOne() public {
@@ -138,9 +138,9 @@ contract VickreyAuctionTestAdvanced {
         bob.callWithdraw();
         carol.callWithdraw();
 
-        Assert.equal(address(alice).balance, 5000, "loser should received full refund");
-        Assert.equal(address(bob).balance, 5000, "loser should received full refund");
-        Assert.equal(address(carol).balance, 4383, "winner should received partial refund");
+        Assert.equal(address(alice).balance, 5000, "loser should receive full refund");
+        Assert.equal(address(bob).balance, 5000, "loser should receive full refund");
+        Assert.equal(address(carol).balance, 4383, "winner should receive partial refund");
     }
 
     function testMultipleBiddersTwo() public {
@@ -167,8 +167,8 @@ contract VickreyAuctionTestAdvanced {
         bob.callWithdraw();
         carol.callWithdraw();
 
-        Assert.equal(address(alice).balance, 5000, "loser should received full refund");
-        Assert.equal(address(bob).balance, 5000, "loser should received full refund");
-        Assert.equal(address(carol).balance, 4383, "winner should received partial refund");
+        Assert.equal(address(alice).balance, 5000, "loser should receive full refund");
+        Assert.equal(address(bob).balance, 5000, "loser should receive full refund");
+        Assert.equal(address(carol).balance, 4383, "winner should receive partial refund");
     }
 }
