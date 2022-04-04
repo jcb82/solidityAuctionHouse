@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -17,8 +18,8 @@ contract VickreyAuctionTestAdvanced {
     uint public initialBalance = 1000000000 wei;
 
     //can receive money
-    function() external payable {}
-    constructor() public payable {}
+    receive() external payable {}
+    constructor() {}
 
     function setupContracts() public {
         t = new Timer(0);
@@ -78,7 +79,7 @@ contract VickreyAuctionTestAdvanced {
     function testMinimalBidder() public {
         setupContracts();
 
-        address(alice).transfer(5000);
+        payable(alice).transfer(5000);
 
         commitBid(alice, 300, 9, true, "valid bid commitment should be accepted");
         revealBid(alice, 300, 19, true, "valid bid reveal should be accepted");
@@ -93,9 +94,9 @@ contract VickreyAuctionTestAdvanced {
     function testRevealChangedBid() public {
         setupContracts();
 
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
-        address(carol).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
+        payable(carol).transfer(5000);
 
         Assert.isTrue(alice.commitBid(500, 1000), "valid bid should be accepted");
         t.setTime(1);
@@ -118,9 +119,9 @@ contract VickreyAuctionTestAdvanced {
     function testMultipleBiddersOne() public {
         setupContracts();
 
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
-        address(carol).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
+        payable(carol).transfer(5000);
 
         commitBid(alice, 500, 1, true, "correct bid should be accepted");
         commitBid(bob, 617, 2, true, "correct bid should be accepted");
@@ -146,9 +147,9 @@ contract VickreyAuctionTestAdvanced {
     function testMultipleBiddersTwo() public {
         setupContracts();
 
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
-        address(carol).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
+        payable(carol).transfer(5000);
 
         commitBid(alice, 500, 1, true, "correct bid should be accepted");
         commitBid(bob, 617, 2, true, "correct bid should be accepted");

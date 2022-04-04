@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -17,8 +18,8 @@ contract VickreyAuctionTestBasic {
     uint public initialBalance = 1000000000 wei;
 
     //can receive money
-    function() external payable {}
-    constructor() public payable {}
+    receive() external payable {}
+    constructor() payable {}
 
     function setupContracts() public {
         t = new Timer(0);
@@ -86,9 +87,9 @@ contract VickreyAuctionTestBasic {
     function testCommitBids() public {
         setupContracts();
         
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
-        address(carol).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
+        payable(carol).transfer(5000);
         
         commitBid(alice, 10, 1, true, "valid bid commitment should be accepted");
         commitBid(bob, 1000, 2, true, "valid bid commitment should be accepted");
@@ -98,9 +99,9 @@ contract VickreyAuctionTestBasic {
     function testLateBidCommitments() public {
         setupContracts();
         
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
-        address(carol).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
+        payable(carol).transfer(5000);
         
         commitBid(carol, 340, 7, true, "valid bid commitment should be accepted");
         commitBid(alice, 300, 10, false, "late bid commitment should be rejected");
@@ -110,7 +111,7 @@ contract VickreyAuctionTestBasic {
     function testExcessBidDeposit() public {
         setupContracts();
         
-        address(alice).transfer(5000);
+        payable(alice).transfer(5000);
         
         Assert.isFalse(alice.commitBid(1000, 1067), "bid with excess deposit should be rejected");
         Assert.equal(address(alice).balance, 5000, "bid with excess deposit should be rejected");
@@ -119,7 +120,7 @@ contract VickreyAuctionTestBasic {
     function testChangeBidCommitmentRefund() public {
         setupContracts();
         
-        address(alice).transfer(5000);
+        payable(alice).transfer(5000);
         
         Assert.isTrue(alice.commitBid(500, 1000), "valid bid should be accepted");
         t.setTime(1);
@@ -136,7 +137,7 @@ contract VickreyAuctionTestBasic {
     function testEarlyReveal() public {
         setupContracts();
         
-        address(alice).transfer(5000);
+        payable(alice).transfer(5000);
         
         commitBid(alice, 340, 7, true, "valid bid commitment should be accepted");
         revealBid(alice, 340, 9, false, "early bid reveal should be rejected");
@@ -145,7 +146,7 @@ contract VickreyAuctionTestBasic {
     function testLateReveal() public {
         setupContracts();
         
-        address(alice).transfer(5000);
+        payable(alice).transfer(5000);
         
         commitBid(alice, 340, 7, true, "valid bid commitment should be accepted");
         revealBid(alice, 340, 20, false, "late bid reveal should be rejected");
@@ -154,8 +155,8 @@ contract VickreyAuctionTestBasic {
     function testInvalidReveal() public {
         setupContracts();
         
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
         
         commitBid(alice, 340, 7, true, "valid bid commitment should be accepted");
         commitBid(bob, 380, 8, true, "valid bid commitment should be accepted");

@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -12,8 +13,8 @@ contract DutchAuctionTest {
     uint public initialBalance = 1000000000 wei;
 
     //can receive money
-    function() external payable {}
-    constructor() public payable {}
+    receive() external payable {}
+    constructor() {}
 
     function setupContracts() public {
         t = new Timer(0);
@@ -29,7 +30,7 @@ contract DutchAuctionTest {
     ) internal {
 
         DutchAuctionBidder bidder = new DutchAuctionBidder(testAuction);
-        address(bidder).transfer(bidValue);
+        payable(bidder).transfer(bidValue);
         uint oldTime = t.getTime();
         t.setTime(bidTime);
         uint initialAuctionBalance = address(testAuction).balance;

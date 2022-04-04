@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 // Simple contract to store time. You should not need to be modify this contract.
 contract Timer {
@@ -8,7 +9,7 @@ contract Timer {
     address owner;
 
     // constructor
-    constructor(uint _startTime) public {
+    constructor(uint _startTime) {
         owner = msg.sender;
         time = _startTime;
         startTime = _startTime;

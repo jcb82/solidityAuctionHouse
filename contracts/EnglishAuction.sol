@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./Auction.sol";
 
@@ -16,7 +17,7 @@ contract EnglishAuction is Auction {
                           address _timerAddress,
                           uint _initialPrice,
                           uint _biddingPeriod,
-                          uint _minimumPriceIncrement) public
+                          uint _minimumPriceIncrement)
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         initialPrice = _initialPrice;
@@ -31,8 +32,8 @@ contract EnglishAuction is Auction {
     }
 
     // Need to override the default implementation
-    function getWinner() public view returns (address winner){
-        return winner;
+    function getWinner() public override view returns (address winner){
+        return winnerAddress;
         // TODO: place your code here
     }
 }

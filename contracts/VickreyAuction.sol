@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./Auction.sol";
 
@@ -18,7 +19,7 @@ contract VickreyAuction is Auction {
                             uint _minimumPrice,
                             uint _biddingPeriod,
                             uint _revealPeriod,
-                            uint _bidDepositAmount) public
+                            uint _bidDepositAmount)
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         minimumPrice = _minimumPrice;
@@ -44,14 +45,14 @@ contract VickreyAuction is Auction {
     }
 
     // Need to override the default implementation
-    function getWinner() public view returns (address winner){
+    function getWinner() public override view returns (address winner){
         // TODO: place your code here
-        return winner;
+        return winnerAddress;
     }
 
     // finalize() must be extended here to provide a refund to the winner
     // based on the final sale price (the second highest bid, or reserve price).
-    function finalize() public {
+    function finalize() public override {
         // TODO: place your code here
 
         // call the general finalize() logic

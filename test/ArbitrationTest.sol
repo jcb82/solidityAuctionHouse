@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -10,7 +11,7 @@ contract SimpleAuction is Auction {
                            address _judgeAddress,
                            address _timerAddress,
                            address _winner,
-                           uint _winningPrice) public payable
+                           uint _winningPrice) payable
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         if (_winner != address(0))
@@ -23,7 +24,7 @@ contract SimpleAuction is Auction {
     }
 
     //can receive money
-    function() external payable {}
+    receive() external payable {}
 }
 
 contract ArbitrationTest {
@@ -38,21 +39,21 @@ contract ArbitrationTest {
     Participant other;
 
     //can receive money
-    function() external payable{}
-    constructor() public payable {}
+    receive() external payable {}
+    constructor() payable {}
 
     function setupContracts(bool winnerDeclared, bool hasJudge) public {
-        judge = new Participant(Auction(0));
-        winner = new Participant(Auction(0));
-        seller = new Participant(Auction(0));
-        other = new Participant(Auction(0));
+        judge = new Participant(Auction(address(0)));
+        winner = new Participant(Auction(address(0)));
+        seller = new Participant(Auction(address(0)));
+        other = new Participant(Auction(address(0)));
 
         if (hasJudge)
             testAuction = new SimpleAuction(address(seller), address(judge), address(0), address(0), 100);
         else
             testAuction = new SimpleAuction(address(seller), address(0), address(0), address(0), 100);
 
-        address(testAuction).transfer(100 wei);
+        payable(testAuction).transfer(100 wei);
 
         if (winnerDeclared)
             testAuction.declareWinner(address(winner), 100);

@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./Timer.sol";
 
@@ -15,7 +16,7 @@ contract Auction {
     // constructor
     constructor(address _sellerAddress,
                      address _judgeAddress,
-                     address _timerAddress) public {
+                     address _timerAddress) {
 
         judgeAddress = _judgeAddress;
         timerAddress = _timerAddress;
@@ -34,7 +35,7 @@ contract Auction {
         return block.number;
     }
 
-    function getWinner() public view returns (address winner) {
+    function getWinner() public view virtual returns (address winner) {
         return winnerAddress;
     }
 
@@ -44,7 +45,7 @@ contract Auction {
 
     // If no judge is specified, anybody can call this.
     // If a judge is specified, then only the judge or winning bidder may call.
-    function finalize() public {
+    function finalize() public virtual {
         // TODO: place your code here
     }
 

@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./Auction.sol";
 
@@ -16,7 +17,7 @@ contract DutchAuction is Auction {
                           address _timerAddress,
                           uint _initialPrice,
                           uint _biddingPeriod,
-                          uint _offerPriceDecrement) public
+                          uint _offerPriceDecrement)
              Auction (_sellerAddress, _judgeAddress, _timerAddress) {
 
         initialPrice = _initialPrice;

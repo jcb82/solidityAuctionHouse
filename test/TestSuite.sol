@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./TestFramework.sol";
 import "./ArbitrationTest.sol";
@@ -21,7 +22,7 @@ contract TestLogger {
 
     function logTest(string memory name) public {
         bytes memory namebytes = abi.encode(name);
-        (bool success, ) = target.call.gas(3000000)(namebytes);
+        (bool success, ) = target.call{gas:3000000}(namebytes);
         if (success) {
             emit PassedTest(name);
             numPasses += 1;
@@ -42,11 +43,11 @@ contract TestLogger {
 contract TestSuite {
 
     //can receive money
-    function() external payable {}
+    receive() external payable {}
 
     function ArbitrationTests() public {
         ArbitrationTest t = new ArbitrationTest();
-        address(t).transfer(1 ether);
+        payable(t).transfer(1 ether);
         string[10] memory tests = [
             "testCreateContracts()",
             "testEarlyFinalize()",
@@ -67,7 +68,7 @@ contract TestSuite {
 
     function EnglishAuctionTests() public {
         ArbitrationTest t = new ArbitrationTest();
-        address(t).transfer(1 ether);
+        payable(t).transfer(1 ether);
         string[10] memory tests = [
             "testCreateContracts()",
             "testEarlyFinalize()",

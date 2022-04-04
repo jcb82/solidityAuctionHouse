@@ -1,4 +1,5 @@
-pragma solidity ^0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
 import "./TestFramework.sol";
 import "./Bidders.sol";
@@ -16,8 +17,8 @@ contract EnglishAuctionTest {
     uint public initialBalance = 1000000000 wei;
 
     //can receive money
-    function() external payable {}
-    constructor() public payable {}
+    receive() external payable {}
+    constructor() {}
 
     function setupContracts() public {
         t = new Timer(0);
@@ -58,7 +59,7 @@ contract EnglishAuctionTest {
     function testLowInitialBids() public {
         setupContracts();
         
-        address(alice).transfer(1000);
+        payable(alice).transfer(1000);
         
         makeBid(alice, 0, 0, false, "low bid should be rejected");
         makeBid(alice, 299, 9, false, "low bid should be rejected");
@@ -68,7 +69,7 @@ contract EnglishAuctionTest {
     function testSingleValidBid() public {
         setupContracts();
         
-        address(alice).transfer(1000);
+        payable(alice).transfer(1000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         t.setTime(10);
@@ -78,7 +79,7 @@ contract EnglishAuctionTest {
     function testEarlyWinner() public {
         setupContracts();
         
-        address(alice).transfer(1000);
+        payable(alice).transfer(1000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         t.setTime(9);
@@ -88,8 +89,8 @@ contract EnglishAuctionTest {
     function testLowFollowupBids() public {
         setupContracts();
         
-        address(alice).transfer(1000);
-        address(bob).transfer(1000);
+        payable(alice).transfer(1000);
+        payable(bob).transfer(1000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 319, 9, false, "low bid should be rejected");
@@ -99,8 +100,8 @@ contract EnglishAuctionTest {
     function testRefundAfterOutbid() public {
         setupContracts();
         
-        address(alice).transfer(1000);
-        address(bob).transfer(1000);
+        payable(alice).transfer(1000);
+        payable(bob).transfer(1000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 320, 8, true, "valid bid should be accepted");
@@ -115,9 +116,9 @@ contract EnglishAuctionTest {
     function testLateBids() public {
         setupContracts();
         
-        address(alice).transfer(1000);
-        address(bob).transfer(1000);
-        address(carol).transfer(1000);
+        payable(alice).transfer(1000);
+        payable(bob).transfer(1000);
+        payable(carol).transfer(1000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 320, 10, false, "late bid should be rejected");
@@ -127,7 +128,7 @@ contract EnglishAuctionTest {
     function testIncreaseBid() public {
         setupContracts();
         
-        address(alice).transfer(1000);
+        payable(alice).transfer(1000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(alice, 350, 5, true, "second valid bid should be accepted");
@@ -145,9 +146,9 @@ contract EnglishAuctionTest {
     function testExtendedBidding() public {
         setupContracts();
         
-        address(alice).transfer(5000);
-        address(bob).transfer(5000);
-        address(carol).transfer(5000);
+        payable(alice).transfer(5000);
+        payable(bob).transfer(5000);
+        payable(carol).transfer(5000);
         
         makeBid(alice, 300, 0, true, "valid bid should be accepted");
         makeBid(bob, 310, 4, false, "invalid bid should be rejected");
