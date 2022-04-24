@@ -9,59 +9,177 @@ contract Auction {
     address internal timerAddress;
     address internal sellerAddress;
     address internal winnerAddress;
+    address public owner;
+    uint public bidIncrement;
+    uint public startBlock;
+    uint public endBlock;
+    string public ipfsHash;
     uint winningPrice;
 
-    // TODO: place your code here
+    // state
+    bool public canceled;
+    uint public highestBindingBid;
+    address public highestBidder;
+    mapping(address => uint256) public fundsByBidder;
+    bool ownerHasWithdrawn;
 
-    // constructor
-    constructor(address _sellerAddress,
-                     address _judgeAddress,
-                     address _timerAddress) {
+    event LogBid(address bidder, uint bid, address highestBidder, uint highestBid, uint highestBindingBid);
+    event LogWithdrawal(address withdrawer, address withdrawalAccount, uint amount);
+    event LogCanceled();
 
-        judgeAddress = _judgeAddress;
-        timerAddress = _timerAddress;
-        sellerAddress = _sellerAddress;
-        if (sellerAddress == address(0))
-          sellerAddress = msg.sender;
+    function Auction(address _owner, uint _bidIncrement, uint _startBlock, uint _endBlock, string _ipfsHash) {
+        if (_startBlock >= _endBlock) throw;
+        if (_startBlock < block.number) throw;
+        if (_owner == 0) throw;
+
+        owner = _owner;
+        bidIncrement = _bidIncrement;
+        startBlock = _startBlock;
+        endBlock = _endBlock;
+        ipfsHash = _ipfsHash;
     }
 
-    // This is provided for testing
-    // You should use this instead of block.number directly
-    // You should not modify this function.
-    function time() public view returns (uint) {
-        if (timerAddress != address(0))
-          return Timer(timerAddress).getTime();
-
-        return block.number;
+    function getHighestBid()
+        constant
+        returns (uint)
+    {
+        return fundsByBidder[highestBidder];
     }
 
-    function getWinner() public view virtual returns (address winner) {
-        return winnerAddress;
+    function placeBid()
+        payable
+        onlyAfterStart
+        onlyBeforeEnd
+        onlyNotCanceled
+        onlyNotOwner
+        returns (bool success)
+    {
+        // reject payments of 0 ETH
+        if (msg.value == 0) throw;
+
+        uint newBid = fundsByBidder[msg.sender] + msg.value;
+
+                if (newBid <= highestBindingBid) throw;
+
+        uint highestBid = fundsByBidder[highestBidder];
+
+        fundsByBidder[msg.sender] = newBid;
+
+        if (newBid <= highestBid) {
+
+
+            highestBindingBid = min(newBid + bidIncrement, highestBid);
+        } else {
+
+            if (msg.sender != highestBidder) {
+                highestBidder = msg.sender;
+                highestBindingBid = min(newBid, highestBid + bidIncrement);
+            }
+            highestBid = newBid;
+        }
+
+        LogBid(msg.sender, newBid, highestBidder, highestBid, highestBindingBid);
+        return true;
     }
 
-    function getWinningPrice() public view returns (uint price) {
-        return winningPrice;
+    function min(uint a, uint b)
+        private
+        constant
+        returns (uint)
+    {
+        if (a < b) return a;
+        return b;
     }
 
-    // If no judge is specified, anybody can call this.
-    // If a judge is specified, then only the judge or winning bidder may call.
-    function finalize() public virtual {
-        // TODO: place your code here
+    function cancelAuction()
+        onlyOwner
+        onlyBeforeEnd
+        onlyNotCanceled
+        returns (bool success)
+    {
+        canceled = true;
+        LogCanceled();
+        return true;
     }
 
-    // This can ONLY be called by seller or the judge (if a judge exists).
-    // Money should only be refunded to the winner.
-    function refund() public {
-        // TODO: place your code here
+    function withdraw()
+        onlyEndedOrCanceled
+        returns (bool success)
+    {
+        address withdrawalAccount;
+        uint withdrawalAmount;
+
+        if (canceled) {
+            // if the auction was canceled, everyone should simply be allowed to withdraw their funds
+            withdrawalAccount = msg.sender;
+            withdrawalAmount = fundsByBidder[withdrawalAccount];
+
+        } else {
+            // the auction finished without being canceled
+
+            if (msg.sender == owner) {
+                // the auction's owner should be allowed to withdraw the highestBindingBid
+                withdrawalAccount = highestBidder;
+                withdrawalAmount = highestBindingBid;
+                ownerHasWithdrawn = true;
+
+            } else if (msg.sender == highestBidder) {
+                // the highest bidder should only be allowed to withdraw the difference between their
+                // highest bid and the highestBindingBid
+                withdrawalAccount = highestBidder;
+                if (ownerHasWithdrawn) {
+                    withdrawalAmount = fundsByBidder[highestBidder];
+                } else {
+                    withdrawalAmount = fundsByBidder[highestBidder] - highestBindingBid;
+                }
+
+            } else {
+                // anyone who participated but did not win the auction should be allowed to withdraw
+                // the full amount of their funds
+                withdrawalAccount = msg.sender;
+                withdrawalAmount = fundsByBidder[withdrawalAccount];
+            }
+        }
+
+        if (withdrawalAmount == 0) throw;
+
+        fundsByBidder[withdrawalAccount] -= withdrawalAmount;
+
+        // send the funds
+        if (!msg.sender.send(withdrawalAmount)) throw;
+
+        LogWithdrawal(msg.sender, withdrawalAccount, withdrawalAmount);
+
+        return true;
     }
 
-    // Withdraw funds from the contract.
-    // If called, all funds available to the caller should be refunded.
-    // This should be the *only* place the contract ever transfers funds out.
-    // Ensure that your withdrawal functionality is not vulnerable to
-    // re-entrancy or unchecked-spend vulnerabilities.
-    function withdraw() public {
-        //TODO: place your code here
+    modifier onlyOwner {
+        if (msg.sender != owner) throw;
+        _;
     }
 
+    modifier onlyNotOwner {
+        if (msg.sender == owner) throw;
+        _;
+    }
+
+    modifier onlyAfterStart {
+        if (block.number < startBlock) throw;
+        _;
+    }
+
+    modifier onlyBeforeEnd {
+        if (block.number > endBlock) throw;
+        _;
+    }
+
+    modifier onlyNotCanceled {
+        if (canceled) throw;
+        _;
+    }
+
+    modifier onlyEndedOrCanceled {
+        if (block.number < endBlock && !canceled) throw;
+        _;
+    }
 }
