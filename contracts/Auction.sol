@@ -18,7 +18,7 @@ contract Auction {
                      address _judgeAddress,
                      address _timerAddress,
                      address _winnerAddress,
-                     uint _winningPrice) {
+                     uint _winningPrice) payable {
 
         judgeAddress = _judgeAddress;
         timerAddress = _timerAddress;
