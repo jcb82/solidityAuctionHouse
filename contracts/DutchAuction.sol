@@ -18,7 +18,7 @@ contract DutchAuction is Auction {
                           uint _initialPrice,
                           uint _biddingPeriod,
                           uint _offerPriceDecrement)
-             Auction (_sellerAddress, _judgeAddress, _timerAddress) {
+             Auction (_sellerAddress, _judgeAddress, _timerAddress, address(0), 0) {
 
         initialPrice = _initialPrice;
         biddingPeriod = _biddingPeriod;

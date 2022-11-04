@@ -18,7 +18,7 @@ contract EnglishAuction is Auction {
                           uint _initialPrice,
                           uint _biddingPeriod,
                           uint _minimumPriceIncrement)
-             Auction (_sellerAddress, _judgeAddress, _timerAddress) {
+             Auction (_sellerAddress, _judgeAddress, _timerAddress, address(0), 0) {
 
         initialPrice = _initialPrice;
         biddingPeriod = _biddingPeriod;
@@ -32,7 +32,7 @@ contract EnglishAuction is Auction {
     }
 
     // Need to override the default implementation
-    function getWinner() public override view returns (address winner){
+    function getWinner() public override view returns (address){
         return winnerAddress;
         // TODO: place your code here
     }

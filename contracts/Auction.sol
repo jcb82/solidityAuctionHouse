@@ -16,13 +16,17 @@ contract Auction {
     // constructor
     constructor(address _sellerAddress,
                      address _judgeAddress,
-                     address _timerAddress) {
+                     address _timerAddress,
+                     address _winnerAddress,
+                     uint _winningPrice) {
 
         judgeAddress = _judgeAddress;
         timerAddress = _timerAddress;
         sellerAddress = _sellerAddress;
         if (sellerAddress == address(0))
           sellerAddress = msg.sender;
+        winnerAddress = _winnerAddress;
+        winningPrice = _winningPrice;
     }
 
     // This is provided for testing
@@ -35,7 +39,7 @@ contract Auction {
         return block.number;
     }
 
-    function getWinner() public view virtual returns (address winner) {
+    function getWinner() public view virtual returns (address) {
         return winnerAddress;
     }
 
