@@ -20,7 +20,7 @@ contract VickreyAuction is Auction {
                             uint _biddingPeriod,
                             uint _revealPeriod,
                             uint _bidDepositAmount)
-             Auction (_sellerAddress, _judgeAddress, _timerAddress) {
+             Auction (_sellerAddress, _judgeAddress, _timerAddress, address(0), 0) {
 
         minimumPrice = _minimumPrice;
         bidDepositAmount = _bidDepositAmount;
@@ -40,12 +40,12 @@ contract VickreyAuction is Auction {
 
     // Check that the bid (msg.value) matches the commitment.
     // If the bid is correctly opened, the bidder can withdraw their deposit.
-    function revealBid(bytes32 nonce) public payable{
+    function revealBid(uint nonce) public payable{
         // TODO: place your code here
     }
 
     // Need to override the default implementation
-    function getWinner() public override view returns (address winner){
+    function getWinner() public override view returns (address){
         // TODO: place your code here
         return winnerAddress;
     }
