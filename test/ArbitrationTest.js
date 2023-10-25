@@ -3,34 +3,31 @@ const { expect } = require("chai");
 
 describe("ArbitrationTest", function () {
     async function noWinnerYesJudgeFixture() {
-        const addressZero = ethers.constants.AddressZero;
         const winningPrice = 100;
 
         const [owner, seller, judge, winner, other] = await ethers.getSigners();
         const Auction = await ethers.getContractFactory("Auction");
-        const auction = await Auction.deploy(seller.address, judge.address, addressZero, addressZero, winningPrice, { value: winningPrice });
-
+        const auction = await Auction.deploy(await seller.getAddress(), await judge.getAddress(), ethers.ZeroAddress, winningPrice, { value: winningPrice });
+        
         return { auction, winningPrice, owner, seller, judge, winner, other };
     }
 
     async function yesWinnerNoJudgeFixture() {
-        const addressZero = ethers.constants.AddressZero;
         const winningPrice = 100;
 
         const [owner, seller, judge, winner, other] = await ethers.getSigners();
         const Auction = await ethers.getContractFactory("Auction");
-        const auction = await Auction.deploy(seller.address, addressZero, addressZero, winner.address, winningPrice, { value: winningPrice });
+        const auction = await Auction.deploy(await seller.getAddress(), ethers.ZeroAddress, await winner.getAddress(), winningPrice, { value: winningPrice });
 
         return { auction, winningPrice, owner, seller, judge, winner, other };
     }
 
     async function yesWinnerYesJudgeFixture() {
-        const addressZero = ethers.constants.AddressZero;
         const winningPrice = 100;
 
         const [owner, seller, judge, winner, other] = await ethers.getSigners();
         const Auction = await ethers.getContractFactory("Auction");
-        const auction = await Auction.deploy(seller.address, judge.address, addressZero, winner.address, winningPrice, { value: winningPrice });
+        const auction = await Auction.deploy(await seller.getAddress(), await judge.getAddress(), await winner.getAddress(), winningPrice, { value: winningPrice });
 
         return { auction, winningPrice, owner, seller, judge, winner, other };
     }
