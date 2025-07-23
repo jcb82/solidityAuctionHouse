@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.28;
 
 contract Auction {
 
@@ -9,7 +9,7 @@ contract Auction {
     address internal winnerAddress;
     uint winningPrice;
 
-    // TODO: place your code here
+    mapping(address => uint) balances;
 
     // constructor
     constructor(address _sellerAddress,
@@ -43,17 +43,17 @@ contract Auction {
     // If no judge is specified, anybody can call this.
     // If a judge is specified, then only the judge or winning bidder may call.
     function finalize() public virtual {
-
-        // TODO: place your code here
-
+        require(getWinner() != address(0), "Must specify winner address");
+        require(judgeAddress == address(0) || msg.sender == getWinner() || msg.sender == judgeAddress, "Only judge or winner can finalize.");
+        balances[sellerAddress] += winningPrice;
     }
 
     // This can ONLY be called by seller or the judge (if a judge exists).
     // Money should only be refunded to the winner.
     function refund() public {
-
-        // TODO: place your code here
-
+        require(getWinner() != address(0), "Can't issue refund with no winner");
+        require (msg.sender == sellerAddress || msg.sender == judgeAddress, "Only seller or judge can issue refund");
+        balances[winnerAddress] += winningPrice;
     }
 
     // Withdraw funds from the contract.
@@ -62,9 +62,10 @@ contract Auction {
     // Ensure that your withdrawal functionality is not vulnerable to
     // re-entrancy or unchecked-spend vulnerabilities.
     function withdraw() public {
-
-        //TODO: place your code here
-
+        if (balances[msg.sender] > 0) {
+            payable(msg.sender).transfer(balances[msg.sender]);
+        }
+        balances[msg.sender] = 0;
     }
 
 }

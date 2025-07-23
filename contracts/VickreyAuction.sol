@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.28;
 
 import "./Auction.sol";
 
@@ -10,7 +10,10 @@ contract VickreyAuction is Auction {
     uint public revealDeadline;
     uint public bidDepositAmount;
 
-    // TODO: place your code here
+    mapping(address => bytes32) internal bids;
+    uint internal highestBidValue;
+    uint internal secondHighestBidValue;
+    address internal highestBidder;
 
     // constructor
     constructor(address _sellerAddress,
@@ -26,7 +29,8 @@ contract VickreyAuction is Auction {
         biddingDeadline = time() + _biddingPeriod;
         revealDeadline = time() + _biddingPeriod + _revealPeriod;
 
-        // TODO: place your code here
+        highestBidValue = minimumPrice;
+        secondHighestBidValue = minimumPrice;
     }
 
     // Record the player's bid commitment
@@ -35,30 +39,61 @@ contract VickreyAuction is Auction {
     // Only allow commitments before biddingDeadline
     function commitBid(bytes32 bidCommitment) public payable {
 
-        // TODO: place your code here
+        // reject invalid bids
+        require(time() < biddingDeadline, "Bid too late");
+        if (bids[msg.sender] == 0)
+            require(msg.value == bidDepositAmount, "Must provide required deposit");
+        else if (bids[msg.sender] != 0)
+            require(msg.value == 0, "No deposit for updated bid");
 
+        bids[msg.sender] = bidCommitment;
     }
 
     // Check that the bid (msg.value) matches the commitment.
     // If the bid is correctly opened, the bidder can withdraw their deposit.
     function revealBid(uint nonce) public payable{
 
-        // TODO: place your code here
+        // bidding time period
+        require(time() >= biddingDeadline, "Reveal too early");
+        require(time() < revealDeadline, "Reveal too late");
 
+        // correct commitment opening
+        require(keccak256(abi.encodePacked(msg.value, nonce)) == bids[msg.sender], "Incorrect bid opening");
+
+        // refund bid deposit
+        bids[msg.sender] = bytes32(0);
+
+        if((msg.value > highestBidValue || (msg.value == highestBidValue && highestBidder == address(0)))) {
+            if (highestBidder != address(0))
+                balances[highestBidder] += highestBidValue;
+            secondHighestBidValue = highestBidValue;
+            highestBidder = msg.sender;
+            highestBidValue = msg.value;
+            balances[msg.sender] += bidDepositAmount;
+        }
+        else {
+            balances[msg.sender] += bidDepositAmount + msg.value;
+            if (msg.value > secondHighestBidValue) {
+                secondHighestBidValue = msg.value;
+            }
+        }
     }
 
     // Need to override the default implementation
     function getWinner() public override view returns (address winner){
-
-        // TODO: place your code here
-
+        if (time() < revealDeadline)
+          return address(0);
+        return highestBidder;
     }
 
     // finalize() must be extended here to provide a refund to the winner
     // based on the final sale price (the second highest bid, or reserve price).
     function finalize() public override {
- 
-        // TODO: place your code here
+
+        if (highestBidder != address(0))
+            winnerAddress = highestBidder;
+        if (highestBidValue > secondHighestBidValue)
+            balances[highestBidder] += (highestBidValue - secondHighestBidValue);
 
         // call the general finalize() logic
         super.finalize();

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.28;
 
 import "./Auction.sol";
 
@@ -9,7 +9,9 @@ contract EnglishAuction is Auction {
     uint public biddingPeriod;
     uint public minimumPriceIncrement;
 
-    // TODO: place your code here
+    uint currentPrice;
+    address currentWinner;
+    uint bidDeadline;
 
     // constructor
     constructor(address _sellerAddress,
@@ -23,20 +25,27 @@ contract EnglishAuction is Auction {
         biddingPeriod = _biddingPeriod;
         minimumPriceIncrement = _minimumPriceIncrement;
 
-        // TODO: place your code here
-
+        currentPrice = initialPrice - minimumPriceIncrement;
+        currentWinner = address(0);
+        bidDeadline = time() + biddingPeriod;
     }
 
     function bid() public payable{
+        require(time() < bidDeadline, "Bid too late");
+        require(msg.value >= currentPrice + minimumPriceIncrement, "Bid too low");
 
-        // TODO: place your code here
+        if (currentWinner != address(0))
+            balances[currentWinner] += currentPrice;
 
+        currentWinner = msg.sender;
+        currentPrice = msg.value;
+        bidDeadline = time() + biddingPeriod;
     }
 
     // Need to override the default implementation
     function getWinner() public override view returns (address winner){
-
-        // TODO: place your code here
-
+        if (time() < bidDeadline)
+          return address(0);
+        return currentWinner;
     }
 }

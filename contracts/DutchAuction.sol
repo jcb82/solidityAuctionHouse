@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.28;
 
 import "./Auction.sol";
 
@@ -9,7 +9,7 @@ contract DutchAuction is Auction {
     uint public biddingPeriod;
     uint public offerPriceDecrement;
 
-    // TODO: place your code here
+    uint startTime;
 
     // constructor
     constructor(address _sellerAddress,
@@ -23,15 +23,21 @@ contract DutchAuction is Auction {
         biddingPeriod = _biddingPeriod;
         offerPriceDecrement = _offerPriceDecrement;
 
-        // TODO: place your code here
-
+        startTime = time();
     }
 
 
     function bid() public payable{
+        uint blocksElapsed = time() - startTime;
+        require(blocksElapsed < biddingPeriod, "Bid too late");
+        require(winnerAddress == address(0), "Bid after Dutch auction finished");
 
-        // TODO: place your code here
-
+        uint currentPrice = initialPrice - offerPriceDecrement * blocksElapsed;
+        require(msg.value >= currentPrice, "Bid must meet minimum value");
+        winnerAddress = msg.sender;
+        if (msg.value > currentPrice) {
+            balances[winnerAddress] += (msg.value - currentPrice);
+        }
     }
 
 }
