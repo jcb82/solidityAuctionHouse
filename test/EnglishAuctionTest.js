@@ -12,7 +12,7 @@ describe("EnglishAuctionTest", function () {
         const [owner, alice, bob, carol] = await ethers.getSigners();
 
         const EnglishAuction = await ethers.getContractFactory("EnglishAuction");
-        const eA = await EnglishAuction.deploy(await owner.getAddress(), ethers.ZeroAddress, initialPrice, biddingPeriod, minimumPriceIncrement);
+        const eA = await EnglishAuction.deploy(await owner.getAddress(), initialPrice, biddingPeriod, minimumPriceIncrement);
 
         return { eA, alice, bob, carol };
     }
@@ -21,7 +21,7 @@ describe("EnglishAuctionTest", function () {
         return await signer.runner.provider.getBalance(signer.getAddress());
     }
 
-    it("Low bids should be rejected", async function () {
+    it("Low bids", async function () {
         const { eA, alice } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
 
@@ -30,7 +30,7 @@ describe("EnglishAuctionTest", function () {
         await expect(eA.connect(alice).bid({ value: 299 })).to.be.reverted;
     });
 
-    it("Single valid bid should succeed", async function () {
+    it("Single valid bid", async function () {
         const { eA, alice } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -40,7 +40,7 @@ describe("EnglishAuctionTest", function () {
         expect(await eA.getWinner()).to.equal(await alice.getAddress());
     });
 
-    it("No winner should be declared before deadline", async function () {
+    it("Winner checked before deadline", async function () {
         const { eA, alice } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -51,7 +51,7 @@ describe("EnglishAuctionTest", function () {
         expect(await eA.getWinner()).to.equal(ethers.ZeroAddress);
     });
 
-    it("Low following bids should be rejected", async function () {
+    it("Low bids following higher bids", async function () {
         const { eA, alice, bob } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -62,7 +62,7 @@ describe("EnglishAuctionTest", function () {
         await expect(eA.connect(bob).bid({ value: 250 })).to.be.reverted;
     });
 
-    it("Refund after getting outbid should work properly", async function () {
+    it("Refund after getting outbid", async function () {
         const { eA, alice, bob } = await loadFixture(deployFixture);
 
         await expect(eA.connect(alice).bid({ value: 300 })).to.changeEtherBalance(eA, 300);
@@ -71,7 +71,7 @@ describe("EnglishAuctionTest", function () {
         await expect(eA.connect(alice).withdraw()).to.changeEtherBalances([eA, alice], [-300, 300]);
     });
 
-    it("Late bids should be rejected", async function () {
+    it("Late bids", async function () {
         const { eA, alice, bob, carol } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -82,7 +82,7 @@ describe("EnglishAuctionTest", function () {
         await expect(eA.connect(carol).bid({ value: 500 })).to.be.reverted;
     });
 
-    it("Second valid bid should be accepted", async function () {
+    it("Second valid bid", async function () {
         const { eA, alice } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -97,7 +97,7 @@ describe("EnglishAuctionTest", function () {
         await expect(eA.connect(alice).withdraw()).to.changeEtherBalances([eA, alice], [-300, 300]);
     });
 
-    it("Extended bidding should work as intended", async function () {
+    it("Extended bidding", async function () {
         const { eA, alice, bob, carol } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         

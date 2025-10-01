@@ -9,28 +9,23 @@ contract DutchAuction is Auction {
     uint public biddingPeriod;
     uint public offerPriceDecrement;
 
-    // TODO: place your code here
+    // TODO: Your code here
 
     // constructor
-    constructor(address _sellerAddress,
-                          address _judgeAddress,
-                          uint _initialPrice,
-                          uint _biddingPeriod,
-                          uint _offerPriceDecrement)
-             Auction (_sellerAddress, _judgeAddress, address(0), 0) {
+    constructor(address sellerAddress_,
+                          uint initialPrice_,
+                          uint biddingPeriod_,
+                          uint offerPriceDecrement_)
+             Auction (sellerAddress_) {
 
-        initialPrice = _initialPrice;
-        biddingPeriod = _biddingPeriod;
-        offerPriceDecrement = _offerPriceDecrement;
-
-        // TODO: place your code here
+          // TODO: Your code here
 
     }
 
 
     function bid() public payable{
 
-        // TODO: place your code here
+          // TODO: Your code here
 
     }
 

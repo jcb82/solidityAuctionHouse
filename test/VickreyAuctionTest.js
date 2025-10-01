@@ -13,13 +13,13 @@ describe("VickreyAuctionTest", function () {
         const [owner, alice, bob, carol] = await ethers.getSigners();
 
         const VickreyAuction = await ethers.getContractFactory("VickreyAuction");
-        const vA = await VickreyAuction.deploy(await owner.getAddress(), ethers.ZeroAddress, minimumPrice, biddingPeriod, revealPeriod, bidDepositAmount);
+        const vA = await VickreyAuction.deploy(await owner.getAddress(), minimumPrice, biddingPeriod, revealPeriod, bidDepositAmount);
 
         return { vA, alice, bob, carol };
     }
 
     describe("Basic", function () {
-        it("Valid bid commitments should be accepted", async function () {
+        it("Valid bid commitments accepted", async function () {
             const { vA, alice, bob, carol } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -33,7 +33,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(carol).commitBid(carolBidCommitment, { value: 1000 })).to.changeEtherBalance(vA, 1000);
         });
 
-        it("Late bid commitments should be rejected", async function () {
+        it("Late bid commitments", async function () {
             const { vA, alice, bob, carol } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -48,14 +48,14 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(carol).commitBid(carolBidCommitment, { value: 1000 })).to.be.reverted;
         });
 
-        it("Bid with excess deposit should be rejected", async function () {
+        it("Bid with excess deposit", async function () {
             const { vA, alice } = await loadFixture(deployFixture);
             
             const aliceBidCommitment = ethers.solidityPackedKeccak256(["uint", "uint"], [1000, 1]);
             await expect(vA.connect(alice).commitBid(aliceBidCommitment, { value: 1067 })).to.be.reverted;
         });
 
-        it("Bid commitment updates should work as intended", async function () {
+        it("Bid commitment update", async function () {
             const { vA, alice } = await loadFixture(deployFixture);
 
             const aliceBidCommitment1 = ethers.solidityPackedKeccak256(["uint", "uint"], [500, 1]);
@@ -71,7 +71,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(alice).commitBid(aliceBidCommitment4, { value: 1000 })).to.be.reverted;
         });
 
-        it("Early bid reveal should be rejected", async function () {
+        it("Early bid reveal", async function () {
             const { vA, alice } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -82,7 +82,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(alice).revealBid(1, { value: 340 })).to.be.reverted;
         });
 
-        it("Late bid reveal should be rejected", async function () {
+        it("Late bid reveal", async function () {
             const { vA, alice } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -93,7 +93,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(alice).revealBid(1, { value: 340 })).to.be.reverted;
         });
 
-        it("Incorrect bid reveals should be rejected", async function () {
+        it("Incorrect bid reveals", async function () {
             const { vA, alice, bob } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -110,7 +110,7 @@ describe("VickreyAuctionTest", function () {
     });
 
     describe("Advanced", function () {
-        it("One bidder scenario should work as intended", async function () {
+        it("One bidder scenario", async function () {
             const { vA, alice } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -125,7 +125,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(alice).withdraw()).to.changeEtherBalance(alice, 1000);
         });
 
-        it("Correct bid reveal after update should be accepted", async function () {
+        it("Correct bid reveal after update", async function () {
             const { vA, alice } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
             
@@ -145,7 +145,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(alice).withdraw()).to.changeEtherBalance(alice, 1250);
         });
 
-        it("Multiple bidders scenario should work as intended 1", async function () {
+        it("Multiple bidders scenario #1", async function () {
             const { vA, alice, bob, carol } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
 
@@ -171,7 +171,7 @@ describe("VickreyAuctionTest", function () {
             await expect(vA.connect(carol).withdraw()).to.changeEtherBalance(carol, 1033);
         });
 
-        it("Multiple bidders scenario should work as intended 2", async function () {
+        it("Multiple bidders scenario #2", async function () {
             const { vA, alice, bob, carol } = await loadFixture(deployFixture);
             const startBlock = await time.latestBlock();
 

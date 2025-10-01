@@ -10,23 +10,18 @@ contract VickreyAuction is Auction {
     uint public revealDeadline;
     uint public bidDepositAmount;
 
-    // TODO: place your code here
+    // TODO: Your code here
 
     // constructor
-    constructor(address _sellerAddress,
-                            address _judgeAddress,
-                            uint _minimumPrice,
-                            uint _biddingPeriod,
-                            uint _revealPeriod,
-                            uint _bidDepositAmount)
-             Auction (_sellerAddress, _judgeAddress, address(0), 0) {
+    constructor(address sellerAddress_,
+                            uint minimumPrice_,
+                            uint biddingPeriod_,
+                            uint revealPeriod_,
+                            uint bidDepositAmount_)
+             Auction (sellerAddress_) {
 
-        minimumPrice = _minimumPrice;
-        bidDepositAmount = _bidDepositAmount;
-        biddingDeadline = time() + _biddingPeriod;
-        revealDeadline = time() + _biddingPeriod + _revealPeriod;
-
-        // TODO: place your code here
+          // TODO: Your code here
+          
     }
 
     // Record the player's bid commitment
@@ -35,32 +30,30 @@ contract VickreyAuction is Auction {
     // Only allow commitments before biddingDeadline
     function commitBid(bytes32 bidCommitment) public payable {
 
-        // TODO: place your code here
-
+        // TODO: Your code here
+          
     }
 
     // Check that the bid (msg.value) matches the commitment.
     // If the bid is correctly opened, the bidder can withdraw their deposit.
     function revealBid(uint nonce) public payable{
 
-        // TODO: place your code here
-
+        // TODO: Your code here
+           
     }
 
     // Need to override the default implementation
     function getWinner() public override view returns (address winner){
-
-        // TODO: place your code here
-
+    
+        // TODO: Your code here
+             
     }
 
     // finalize() must be extended here to provide a refund to the winner
     // based on the final sale price (the second highest bid, or reserve price).
     function finalize() public override {
- 
-        // TODO: place your code here
 
-        // call the general finalize() logic
-        super.finalize();
+          // TODO: Your code here
+          
     }
 }

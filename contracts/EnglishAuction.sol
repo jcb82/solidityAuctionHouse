@@ -9,34 +9,28 @@ contract EnglishAuction is Auction {
     uint public biddingPeriod;
     uint public minimumPriceIncrement;
 
-    // TODO: place your code here
-
+    // TODO: Your code here
+    
     // constructor
-    constructor(address _sellerAddress,
-                          address _judgeAddress,
-                          uint _initialPrice,
-                          uint _biddingPeriod,
-                          uint _minimumPriceIncrement)
-             Auction (_sellerAddress, _judgeAddress, address(0), 0) {
+    constructor(address sellerAddress_,
+                          uint initialPrice_,
+                          uint biddingPeriod_,
+                          uint minimumPriceIncrement_)
+             Auction (sellerAddress_) {
 
-        initialPrice = _initialPrice;
-        biddingPeriod = _biddingPeriod;
-        minimumPriceIncrement = _minimumPriceIncrement;
-
-        // TODO: place your code here
-
+        // TODO: Your code here
     }
 
     function bid() public payable{
-
-        // TODO: place your code here
-
+    
+          // TODO: Your code here
+          
     }
 
     // Need to override the default implementation
     function getWinner() public override view returns (address winner){
-
-        // TODO: place your code here
-
+    
+          // TODO: Your code here
+          
     }
 }

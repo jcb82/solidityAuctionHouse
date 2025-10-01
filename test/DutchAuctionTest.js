@@ -12,7 +12,7 @@ describe("DutchAuctionTest", function () {
         const [owner, bidder] = await ethers.getSigners();
         const DutchAuction = await ethers.getContractFactory("DutchAuction");
 
-        const dA = await DutchAuction.deploy(await owner.getAddress(), ethers.ZeroAddress, initialPrice, biddingPeriod, offerPriceDecrement);
+        const dA = await DutchAuction.deploy(await owner.getAddress(), initialPrice, biddingPeriod, offerPriceDecrement);
         
         return {dA, bidder };
     }
@@ -21,7 +21,7 @@ describe("DutchAuctionTest", function () {
         return await signer.runner.provider.getBalance(signer.getAddress());
     }
 
-    it("Low bids should be rejected", async function () {
+    it("Insufficient bid", async function () {
         const {dA, bidder } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -35,7 +35,7 @@ describe("DutchAuctionTest", function () {
         await expect(dA.connect(bidder).bid({ value: 119 })).to.be.reverted;
     });
 
-    it("Exact bid should be accepted 1", async function () {
+    it("Exact bid #1", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
        
         const bidValue = 300;
@@ -48,7 +48,7 @@ describe("DutchAuctionTest", function () {
         expect(await dA.getWinner()).to.equal(bidder.address);
     });
 
-    it("Exact bid should be accepted 2", async function () {
+    it("Exact bid #2", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
         const bidValue = 200;
         const expectedPrice = 200;
@@ -61,7 +61,7 @@ describe("DutchAuctionTest", function () {
         expect(await dA.getWinner()).to.equal(bidder.address);
     });
 
-    it("Exact bid should be accepted 3", async function () {
+    it("Exact bid #3", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
         const bidValue = 120;
         const expectedPrice = 120;
@@ -74,7 +74,7 @@ describe("DutchAuctionTest", function () {
         expect(await dA.getWinner()).to.equal(bidder.address);
     });
 
-    it("Valid bid after an invalid bid should succeed", async function () {
+    it("Valid bid after an invalid bid", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
         const bidValue = 200;
         const expectedPrice = 200;
@@ -89,7 +89,7 @@ describe("DutchAuctionTest", function () {
         expect(await dA.getWinner()).to.equal(bidder.address);
     });
 
-    it("Late bid should be rejected", async function () {
+    it("Late bid", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
         const startBlock = await time.latestBlock();
         
@@ -97,7 +97,7 @@ describe("DutchAuctionTest", function () {
         await expect(dA.connect(bidder).bid({ value: 300 })).to.be.reverted;
     });
 
-    it("Second valid bid after a first valid bid should be rejected", async function () {
+    it("Valid bid after a successful bid", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
         const bidValue = 280;
         const expectedPrice = 280;
@@ -110,7 +110,7 @@ describe("DutchAuctionTest", function () {
         await expect(dA.connect(bidder).bid({ value: 300 })).to.be.reverted;
     });
 
-    it("A high bid should be partially refunded properly", async function () {
+    it("Partial refund for excessive bid", async function () {
         const { dA, bidder } = await loadFixture(deployFixture);
         const bidValue = 300;
         const expectedPrice = 260;
